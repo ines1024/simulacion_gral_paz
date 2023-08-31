@@ -16,6 +16,9 @@ class Auto:
         self.auto_ad = (v_ad, p_ad)
         self.auto_at = (v_at, p_at)
         self.t = t
+
+    def __repr__ (self):
+        return str(self.__dict__)
     
     def acelerar(self):
         
@@ -33,8 +36,9 @@ class Auto:
         
 class Carril:
     def __init__(self, autos:list[Auto]):
-        
         self.autos = autos
+
+
 
 
         
