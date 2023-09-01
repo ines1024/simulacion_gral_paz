@@ -8,17 +8,19 @@
 
 
 class Auto:
-    def __init__(self, id:int, p:int, t:int, v:int, a:int, v_ad:int, v_at:int, p_ad:int, p_at:int):
+    def __init__(self, id:int, p:int, t:int, v:int, a:int):
         self.id = id
         self.pos = (p, t)
+        self.t = t
         self.vel = (v, t)
         self.acel = (a, t)
-        self.auto_ad = (v_ad, p_ad)
-        self.auto_at = (v_at, p_at)
-        self.t = t
+        self.fin = 0
 
     def __repr__ (self):
         return str(self.__dict__)
+    
+    def final_recorrido(self):
+        self.fin = 1
     
     def acelerar(self):
         
@@ -26,7 +28,7 @@ class Auto:
             val_aceleracion = 1 #numero random c mas prob de q sea alto
         
         else:
-            val_aceleracion =  0 #numero rand c prob mas chica
+            val_aceleracion =  0 #numero random c prob mas chica
         
         self.acel = (val_aceleracion, self.t +1)
         self.vel = (self.vel[0] + self.acel[0], self.t + 1)
@@ -37,14 +39,20 @@ class Auto:
 class Carril:
     def __init__(self, autos:list[Auto]):
         self.autos = autos
-
-
-
-
         
-        
-
-
-
-
-
+    def adelante(self, i):
+        if self.autos[i-1].fin == 1:
+            # el de adelante ya salio
+            return (1000, 100000)
+        v = self.autos[i-1].vel
+        p = self.autos[i-1].pos
+        return (v, p)
+    
+    def atras(self, i):
+        if i == len(self.autos)-1:
+            # es el ultimo que entro
+            return (-1000, -100000)
+        v = self.autos[i+1].vel
+        p = self.autos[i+1].pos
+        return (v, p)
+    
