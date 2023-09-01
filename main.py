@@ -39,7 +39,7 @@ for seg in range(tiempo_total):
     for auto in carril.autos:
         if (auto.fin == 0): # el auto todavia no termino
         # pensar ratio de vel ~ pos del de adelante (que define cuanto acelera)
-            aceleracion = 0 # -1 < a < 1
+            aceleracion = 0 # -1 < a < 1 (-1 es clavar los frenos)
             auto.pos += auto.vel * aceleracion # funciona supongo porque vel esta definida en metros por segundo
             auto.t = seg
     
