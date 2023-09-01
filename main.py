@@ -38,10 +38,9 @@ tiempo_total = 60
 for seg in range(tiempo_total):
     for auto in carril.autos:
         if (auto.fin == 0): # el auto todavia no termino
-        # pensar ratio de vel ~ pos del de adelante (me define cuanto acelero)
-            aceleracion = 0
-            auto.pos += auto.vel * aceleracion
-            #porque vel esta definida en metros por segundo
+        # pensar ratio de vel ~ pos del de adelante (que define cuanto acelera)
+            aceleracion = 0 # -1 < a < 1
+            auto.pos += auto.vel * aceleracion # funciona supongo porque vel esta definida en metros por segundo
             auto.t = seg
     
     if seg // 2 == 0: 
@@ -57,4 +56,5 @@ for seg in range(tiempo_total):
     plt.title(f'Segundo {seg + 1}')
     plt.savefig(f'segundo_{seg + 1}.png')  # Guarda la imagen de cada segundo
     plt.clf()  # Limpia la gráfica para el siguiente segundo
-    time.sleep(1)  # Espera 1 segundo antes del próximo segundo
+
+    time.sleep(1)  # espera 1 segundo antes de la prox ronda de decisiones
