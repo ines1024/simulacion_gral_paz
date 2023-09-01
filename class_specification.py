@@ -15,6 +15,7 @@ class Auto:
         self.vel = (v, t)
         self.acel = (a, t)
         self.fin = 0
+        # guardar tiempo de entrada? porque el de salida se guarda en el main
 
     def __repr__ (self):
         return str(self.__dict__)
@@ -33,8 +34,6 @@ class Auto:
         self.acel = (val_aceleracion, self.t +1)
         self.vel = (self.vel[0] + self.acel[0], self.t + 1)
         self.pos = (self.pos[0] + self.vel[0], self.t + 1)
-
-        self.t += 1
         
 class Carril:
     def __init__(self, autos:list[Auto]):
