@@ -35,6 +35,15 @@ carril: Carril = Carril(autos)
 t = 0
 tiempo_total = 60
 
+'''
+fig, ax = plt.subplots()
+plt.xlabel('Distancia (metros)')
+plt.ylabel('Tiempo (segundos)')
+
+posiciones = [[] for _ in range(len(carril.autos))]  # Lista de listas para las posiciones
+tiempos = [[] for _ in range(len(carril.autos))]     # Lista de listas para los tiempos
+'''
+
 for seg in range(tiempo_total):
     for auto in carril.autos:
         if (auto.fin == 0): # el auto todavia no termino
@@ -42,19 +51,31 @@ for seg in range(tiempo_total):
             aceleracion = 0 # -1 < a < 1 (-1 es clavar los frenos)
             auto.pos += auto.vel * aceleracion # funciona supongo porque vel esta definida en metros por segundo
             auto.t = seg
+        
+    '''
+    # Guarda la posición y el tiempo en las listas correspondientes (para graficar)
+    posiciones[auto.id].append(auto.pos)
+    tiempos[auto.id].append(auto.t)
+    '''
     
-    if seg // 2 == 0: 
+    if seg % 2 == 0: 
         i_nuevo = len(carril.autos)
         # agrego auto cada dos segundos
         nuevo_auto: Auto = Auto(i_nuevo, 0, seg, np.random.randint(min_vel, max_vel), 0)
         carril.autos.append(nuevo_auto)
 
+    time.sleep(1)
+        
+    '''  
+    # Graficar la posición de los autos en el carril
+    for i in range(len(carril.autos)):
+        if carril.autos[i].fin==0:
+            plt.scatter(posiciones[i], tiempos[i], label=f'Auto {i + 1}', s=20)
 
-    # esto me dijo GPT, ignorenlo xd 
-    plt.scatter(range(tiempo_total), [0] * len(carril.autos), c='gray', marker='o', s=100)  # Carril
-    plt.scatter(range(tiempo_total), [0.5] * len(carril.autos), c='blue', marker='o', s=100)  # Autos
-    plt.title(f'Segundo {seg + 1}')
-    plt.savefig(f'segundo_{seg + 1}.png')  # Guarda la imagen de cada segundo
-    plt.clf()  # Limpia la gráfica para el siguiente segundo
 
-    time.sleep(1)  # espera 1 segundo antes de la prox ronda de decisiones
+    plt.legend()
+    '''
+
+'''
+plt.show()
+'''

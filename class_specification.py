@@ -10,10 +10,10 @@
 class Auto:
     def __init__(self, id:int, p:int, t:int, v:int, a:int):
         self.id = id
-        self.pos = (p, t)
+        self.pos = p
         self.t = t
-        self.vel = (v, t)
-        self.acel = (a, t)
+        self.vel = v
+        self.acel = a
         self.fin = 0
         # guardar tiempo de entrada? porque el de salida se guarda en el main
 
