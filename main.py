@@ -3,6 +3,9 @@ import random
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+import pygame
+import sys
 
  # iniciamos la simulacion ingresando de a 1 auto
  # t = 0
@@ -27,6 +30,24 @@ while (dist < 32000):
     i+=1
     dist += 200
 
+########################## GRAFICO
+# Inicializa Pygame
+pygame.init()
+
+# Configuración de la ventana
+window_width = 1000
+window_height = 200
+window = pygame.display.set_mode((window_width, window_height))
+pygame.display.set_caption("General Paz")
+
+# Colores
+white = (255, 255, 255)
+black = (0, 0, 0)
+point_color = (255, 0, 0)
+
+# Longitud total de la línea (32,000 metros)
+line_length = 32000
+#############################3
 
 # iniciamos la simulacion con autos cada 200 metros
 carril: Carril = Carril(autos)
@@ -34,48 +55,74 @@ carril: Carril = Carril(autos)
 # arranca el tiempo
 t = 0
 tiempo_total = 60
+# Iniciar la simulación
+carril = Carril(autos)
+tiempo_total = 60  # Tiempo total de simulación en segundos
 
-'''
-fig, ax = plt.subplots()
-plt.xlabel('Distancia (metros)')
-plt.ylabel('Tiempo (segundos)')
+# Reloj para controlar la velocidad de actualización
+reloj = pygame.time.Clock()
+# Tiempo de inicio de la animación
+tiempo_inicio = time.time()
+        
 
-posiciones = [[] for _ in range(len(carril.autos))]  # Lista de listas para las posiciones
-tiempos = [[] for _ in range(len(carril.autos))]     # Lista de listas para los tiempos
-'''
+#    if seg % 2 == 0:
+#       # Agregar un nuevo auto cada dos segundos
+#        i_nuevo = len(carril.autos)
+#        nuevo_auto = Auto(i_nuevo, 0, frame, np.random.randint(min_vel, max_vel), 0)
+#        carril.autos.append(nuevo_auto)
 
-for seg in range(tiempo_total):
+# GRAFICO
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Limpia la pantalla
+    window.fill(white)
+
+    # Dibuja la línea
+    pygame.draw.line(window, black, (0, window_height // 2), (window_width, window_height // 2), 2)
+
     for auto in carril.autos:
         if (auto.fin == 0): # el auto todavia no termino
         # pensar ratio de vel ~ pos del de adelante (que define cuanto acelera)
-            aceleracion = 0 # -1 < a < 1 (-1 es clavar los frenos)
-            auto.pos += auto.vel * aceleracion # funciona supongo porque vel esta definida en metros por segundo
-            auto.t = seg
+            aceleracion = 0
+            auto.pos += (auto.vel + aceleracion) * reloj.get_time() / 1000.0 # funciona supongo porque vel esta definida en metros por segundo
+            auto.vel = auto.vel + aceleracion
+            auto.t +=1
+            pygame.draw.circle(window, point_color, (int(auto.pos), window_height // 2), 3)
+
+        # Si un punto llega al final de la línea, sale del grafico
+        if auto.pos > 32000:
+            auto.fin = 1
+            
+
+
+    '''
+    # Calcula el desplazamiento en función de la velocidad
+    desplazamiento = velocidad_metros_por_segundo * reloj.get_time() / 1000.0  # Obtén el tiempo desde la última actualización
+
+    # Mueve los puntos
+    for i in range(num_puntos):
+        posiciones[i] += desplazamiento[i]
+    '''
+
         
-    '''
-    # Guarda la posición y el tiempo en las listas correspondientes (para graficar)
-    posiciones[auto.id].append(auto.pos)
-    tiempos[auto.id].append(auto.t)
-    '''
     
-    if seg % 2 == 0: 
-        i_nuevo = len(carril.autos)
-        # agrego auto cada dos segundos
-        nuevo_auto: Auto = Auto(i_nuevo, 0, seg, np.random.randint(min_vel, max_vel), 0)
-        carril.autos.append(nuevo_auto)
 
-    time.sleep(1)
-        
-    '''  
-    # Graficar la posición de los autos en el carril
-    for i in range(len(carril.autos)):
-        if carril.autos[i].fin==0:
-            plt.scatter(posiciones[i], tiempos[i], label=f'Auto {i + 1}', s=20)
+    # Dibuja los puntos en sus nuevas posiciones
+    #for i in range(len(carril.autos)):
 
+    # Actualiza la pantalla
+    pygame.display.update()
 
-    plt.legend()
-    '''
+    # Comprueba si la animación ha alcanzado la duración deseada y cierra la ventana
+    tiempo_actual = time.time()
+    if tiempo_actual - tiempo_inicio >= tiempo_total:
+        pygame.quit()
+        sys.exit()
 
-'''
-plt.show()
-'''
+    # Limita la velocidad de actualización a 1 vez por segundo
+    reloj.tick(1)
+
