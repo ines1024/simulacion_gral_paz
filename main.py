@@ -54,10 +54,10 @@ carril: Carril = Carril(autos)
 
 # arranca el tiempo
 t = 0
-tiempo_total = 60
+
 # Iniciar la simulación
 carril = Carril(autos)
-tiempo_total = 60  # Tiempo total de simulación en segundos
+tiempo_total = 120  # Tiempo total de simulación en segundos
 
 # Reloj para controlar la velocidad de actualización
 reloj = pygame.time.Clock()
@@ -65,11 +65,6 @@ reloj = pygame.time.Clock()
 tiempo_inicio = time.time()
         
 
-#    if seg % 2 == 0:
-#       # Agregar un nuevo auto cada dos segundos
-#        i_nuevo = len(carril.autos)
-#        nuevo_auto = Auto(i_nuevo, 0, frame, np.random.randint(min_vel, max_vel), 0)
-#        carril.autos.append(nuevo_auto)
 
 # GRAFICO
 while True:
@@ -82,7 +77,7 @@ while True:
     window.fill(white)
 
     # Dibuja la línea
-    pygame.draw.line(window, black, (0, window_height // 2), (window_width, window_height // 2), 2)
+    pygame.draw.line(window, black, (0, window_height // 2), (window_width, window_height // 2), 1)
 
     for auto in carril.autos:
         if (auto.fin == 0): # el auto todavia no termino
@@ -91,11 +86,19 @@ while True:
             auto.pos += (auto.vel + aceleracion) * reloj.get_time() / 1000.0 # funciona supongo porque vel esta definida en metros por segundo
             auto.vel = auto.vel + aceleracion
             auto.t +=1
-            pygame.draw.circle(window, point_color, (int(auto.pos), window_height // 2), 3)
 
-        # Si un punto llega al final de la línea, sale del grafico
-        if auto.pos > 32000:
-            auto.fin = 1
+            pygame.draw.circle(window, (0, 0, 255), (int(auto.pos), window_height // 2), 2)
+
+    # if t % 2 == 0:
+    # # Agregar un nuevo auto cada dos segundos
+    #     i_nuevo = len(carril.autos)
+    #     nuevo_auto = Auto(i_nuevo, 0, t, np.random.randint(min_vel, max_vel), 0)
+    #     carril.autos.append(nuevo_auto)
+    #     pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos), window_height // 2), 2)
+        
+    #     # Si un punto llega al final de la línea, sale del grafico
+    #     if auto.pos > 32000:
+    #         auto.fin = 1
             
 
 
@@ -118,8 +121,8 @@ while True:
     pygame.display.update()
 
     # Comprueba si la animación ha alcanzado la duración deseada y cierra la ventana
-    tiempo_actual = time.time()
-    if tiempo_actual - tiempo_inicio >= tiempo_total:
+    t +=1
+    if t == tiempo_total:
         pygame.quit()
         sys.exit()
 
