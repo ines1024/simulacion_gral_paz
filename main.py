@@ -20,7 +20,7 @@ max_vel = 80/3.6
 auto1: Auto = Auto(0, 0, 0, np.random.randint(min_vel, max_vel), 0)
 autos: list[Auto] = [auto1]
 i: int = 1
-dist = 200
+dist = 600
 
 #inicializamos el carril (ponemos los autos en el lugar)
 while (dist < 32000):
@@ -28,7 +28,7 @@ while (dist < 32000):
     auto_i: Auto = Auto(i, dist, 0, vel, 0) # id, pos, t, vel, acel
     autos.append(auto_i)
     i+=1
-    dist += 200
+    dist += 600
 
 ########################## GRAFICO
 # Inicializa Pygame
@@ -47,6 +47,7 @@ point_color = (255, 0, 0)
 
 # Longitud total de la línea (32,000 metros)
 line_length = 32000
+escala = window_width / line_length
 #############################3
 
 # iniciamos la simulacion con autos cada 200 metros
@@ -78,16 +79,18 @@ while True:
 
     # Dibuja la línea
     pygame.draw.line(window, black, (0, window_height // 2), (window_width, window_height // 2), 1)
-
+    
+    i = 0
     for auto in carril.autos:
         if (auto.fin == 0): # el auto todavia no termino
         # pensar ratio de vel ~ pos del de adelante (que define cuanto acelera)
-            aceleracion = 0
-            auto.pos += (auto.vel + aceleracion) * reloj.get_time() / 1000.0 # funciona supongo porque vel esta definida en metros por segundo
-            auto.vel = auto.vel + aceleracion
+            pos_adel = carril.adelante(i)
+            auto.acelerar(pos_adel)
+            auto.pos += (auto.vel + auto.acel) * reloj.get_time() /1000.0
             auto.t +=1
-
-            pygame.draw.circle(window, (0, 0, 255), (int(auto.pos), window_height // 2), 2)
+            pos_en_ventana = int(auto.pos*escala)
+            pygame.draw.circle(window, (0, 0, 255), (int(pos_en_ventana), window_height // 2), 2)
+        i+=1
 
     # if t % 2 == 0:
     # # Agregar un nuevo auto cada dos segundos

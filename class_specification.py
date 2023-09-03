@@ -5,6 +5,8 @@
 # {acel, temp} → aceleración a en tiempo t, metros/segundo
 # {vel_ad, temp} → velocidad auto de adelante en tiempo t
 # {vel_at, temp} → velocidad auto de atrás en tiempo t
+import random 
+import numpy as np
 
 
 class Auto:
@@ -23,29 +25,45 @@ class Auto:
     def final_recorrido(self):
         self.fin = 1
     
-    def acelerar(self):
+    def acelerar(self, p):
+        prob_acel = -1
+        if(self.vel == 80/3.6):
+            prob_acel = 0.0
+            val_aceleracion = 0
         
-        if(self.auto_ad[1] - self.pos[0] >= 30):
-            val_aceleracion = 1 #numero random c mas prob de q sea alto
+        if(p - self.pos >= 50):
+            prob_acel = 1.0
+            val_aceleracion = 0.15 * self.vel 
+
+        elif(p-self.pos >= 30):
+            prob_acel = 0.6
+            val_aceleracion = 0.05 * self.vel 
+
+        elif(p-self.pos >= 20):
+            prob_acel = 0.0
+            val_aceleracion = 0.0
         
-        else:
-            val_aceleracion =  0 #numero random c prob mas chica
+
+        if random.random() < prob_acel: #decide si acelerar o no
+        # Calcula la aceleración en función del factor de aceleración máximo
+            self.acel = val_aceleracion # Puedes ajustar el 10.0 según tus necesidades
+            self.vel = self.vel + self.acel
         
-        self.acel = (val_aceleracion, self.t +1)
-        self.vel = (self.vel[0] + self.acel[0], self.t + 1)
-        self.pos = (self.pos[0] + self.vel[0], self.t + 1)
-        
+
+
 class Carril:
     def __init__(self, autos:list[Auto]):
         self.autos = autos
         
     def adelante(self, i):
+        print(i)
         if self.autos[i-1].fin == 1:
             # el de adelante ya salio
-            return (1000, 100000)
+            return 100000
         v = self.autos[i-1].vel
         p = self.autos[i-1].pos
-        return (v, p)
+        print(p)
+        return p
     
     def atras(self, i):
         if i == len(self.autos)-1:
