@@ -84,9 +84,12 @@ while True:
     for auto in carril.autos:
         if (auto.fin == 0): # el auto todavia no termino
         # pensar ratio de vel ~ pos del de adelante (que define cuanto acelera)
-            pos_adel = carril.adelante(i)
-            auto.acelerar(pos_adel)
-            auto.pos += (auto.vel + auto.acel) * reloj.get_time() /1000.0
+            if (i < len(carril.autos)-1):
+                pos_adel = carril.adelante(i+1)[1]
+                vel_adel = carril.adelante(i+1)[0]
+                auto.acelerar(pos_adel, vel_adel)
+                auto.pos += (auto.vel) * reloj.get_time() /1000.0
+            # obs: hacer que el ultimo avance 
             auto.t +=1
             pos_en_ventana = int(auto.pos*escala)
             pygame.draw.circle(window, (0, 0, 255), (int(pos_en_ventana), window_height // 2), 2)
