@@ -13,11 +13,12 @@ class Auto:
     def __init__(self, id:int, p:int, t:int, v:int, a:int):
         self.id = id
         self.pos = p
+        self.t_inicio = t # guardamos tiempo de entrada porque el de salida es el que queda guardado
         self.t = t
         self.vel = v
         self.acel = a
         self.fin = 0
-        # guardar tiempo de entrada? porque el de salida se guarda en el main
+        
 
     def __repr__ (self):
         return str(self.__dict__)
@@ -27,19 +28,22 @@ class Auto:
     
     def acelerar(self, p):
         prob_acel = -1
-        if(self.vel == 80/3.6):
-            prob_acel = 0.0
+
+        distancia = p - self.pos
+
+        if(self.vel == 80/3.6):   #esta yendo a la máxima
+            prob_acel = 0.0 #nota: le agregaria una chance muy pequeña porq hay gente que se zarpa
             val_aceleracion = 0
         
-        if(p - self.pos >= 50):
-            prob_acel = 1.0
+        if(distancia >= 50): 
+            prob_acel = 1.0 #nota: capaz agregaria alguna variable medio random en vez de numeros fijos
             val_aceleracion = 0.15 * self.vel 
 
-        elif(p-self.pos >= 30):
+        elif(distancia >= 30):
             prob_acel = 0.6
             val_aceleracion = 0.05 * self.vel 
 
-        elif(p-self.pos >= 20):
+        elif(distancia >= 20): #nota: no seria else?
             prob_acel = 0.0
             val_aceleracion = 0.0
         
@@ -55,8 +59,8 @@ class Carril:
     def __init__(self, autos:list[Auto]):
         self.autos = autos
         
+
     def adelante(self, i):
-        print(i)
         if self.autos[i-1].fin == 1:
             # el de adelante ya salio
             return 100000

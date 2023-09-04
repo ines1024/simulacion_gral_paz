@@ -102,17 +102,6 @@ while True:
     #     # Si un punto llega al final de la línea, sale del grafico
     #     if auto.pos > 32000:
     #         auto.fin = 1
-            
-
-
-    '''
-    # Calcula el desplazamiento en función de la velocidad
-    desplazamiento = velocidad_metros_por_segundo * reloj.get_time() / 1000.0  # Obtén el tiempo desde la última actualización
-
-    # Mueve los puntos
-    for i in range(num_puntos):
-        posiciones[i] += desplazamiento[i]
-    '''
 
         
     
