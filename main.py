@@ -17,7 +17,7 @@ import sys
 min_vel = 60/3.6
 max_vel = 80/3.6
 # inicializamos el primer auto
-auto1: Auto = Auto(0, 0, 0, np.random.randint(min_vel, max_vel), 0)
+auto1: Auto = Auto(0, 0, 0, np.random.randint(min_vel, max_vel), 0, 0.95, 0, 0)
 autos: list[Auto] = [auto1]
 i: int = 1
 dist = 600
@@ -25,7 +25,8 @@ dist = 600
 #inicializamos el carril (ponemos los autos en el lugar)
 while (dist < 32000):
     vel = np.random.randint(min_vel, max_vel)
-    auto_i: Auto = Auto(i, dist, 0, vel, 0) # id, pos, t, vel, acel
+    p_acel = 0.95
+    auto_i: Auto = Auto(i, dist, 0, vel, 0, p_acel, dist, 0) # id, pos, t, vel, acel
     autos.append(auto_i)
     i+=1
     dist += 600
@@ -86,15 +87,40 @@ while True:
         # pensar ratio de vel ~ pos del de adelante (que define cuanto acelera)
             if (i < len(carril.autos)-1):
                 pos_adel = carril.adelante(i+1)[1]
-                vel_adel = carril.adelante(i+1)[0]
-                auto.acelerar(pos_adel, vel_adel)
+                pos_adel_ant = carril.adelante(i+1)[0]
+                auto.acelerar(pos_adel, pos_adel_ant)
+                auto.pos_ant = auto.pos
                 auto.pos += (auto.vel) * reloj.get_time() /1000.0
+
+                if (auto.choque == 3):
+                    auto.vel = 5
+                    auto.choque = 0
+
+                if (auto.choque > 0):
+                    auto.choque -= 1
+                    auto.vel = 0
+                
+
+                if auto.pos == pos_adel:
+                    print("choque")
+                    auto.choque = 3
+                    auto.vel = 0
+
+                if (i > 0): 
+                    if (carril.autos[i-1].choque > 0):
+                        if (carril.autos[i-1].choque == 3):
+                            auto.vel = 0
+                        else:
+                            auto.vel = 5 * carril.autos[i-1]   
+                                    
+                
             # obs: hacer que el ultimo avance 
             auto.t +=1
             pos_en_ventana = int(auto.pos*escala)
             pygame.draw.circle(window, (0, 0, 255), (int(pos_en_ventana), window_height // 2), 2)
         i+=1
 
+    # ARREGLAR 
     # if t % 2 == 0:
     # # Agregar un nuevo auto cada dos segundos
     #     i_nuevo = len(carril.autos)
