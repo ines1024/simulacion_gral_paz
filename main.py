@@ -20,16 +20,16 @@ max_vel = 80/3.6
 auto1: Auto = Auto(0, 0, 0, np.random.randint(min_vel, max_vel), 0, 0.95, 0, 0)
 autos: list[Auto] = [auto1]
 i: int = 1
-dist = 600
+dist = 500
 
 #inicializamos el carril (ponemos los autos en el lugar)
-while (dist < 32000):
+while (dist < 15000):
     vel = np.random.randint(min_vel, max_vel)
     p_acel = 0.95
     auto_i: Auto = Auto(i, dist, 0, vel, 0, p_acel, dist, 0) # id, pos, t, vel, acel
     autos.append(auto_i)
     i+=1
-    dist += 600
+    dist += 500
 
 ########################## GRAFICO
 # Inicializa Pygame
@@ -44,12 +44,13 @@ pygame.display.set_caption("General Paz")
 # Colores
 white = (255, 255, 255)
 black = (0, 0, 0)
-point_color = (255, 0, 0)
+point_color = (0, 255, 0)
 
-# Longitud total de la línea (32,000 metros)
-line_length = 32000
-escala = window_width / line_length
-#############################3
+# Longitud total de la línea (15000 metros)           
+longitud = 15000
+escala = window_width / longitud
+
+############################# SIMULACION
 
 # iniciamos la simulacion con autos cada 200 metros
 carril: Carril = Carril(autos)
@@ -59,7 +60,7 @@ t = 0
 
 # Iniciar la simulación
 carril = Carril(autos)
-tiempo_total = 120  # Tiempo total de simulación en segundos
+tiempo_total = 20000  # Tiempo total de simulación en segundos
 
 # Reloj para controlar la velocidad de actualización
 reloj = pygame.time.Clock()
@@ -79,7 +80,7 @@ while True:
     window.fill(white)
 
     # Dibuja la línea
-    pygame.draw.line(window, black, (0, window_height // 2), (window_width, window_height // 2), 1)
+    pygame.draw.line(window, black, (0, window_height // 2), (window_width, window_height // 2), 20)
     
     i = 0
     for auto in carril.autos:
@@ -92,6 +93,11 @@ while True:
                 auto.pos_ant = auto.pos
                 auto.pos += (auto.vel) * reloj.get_time() /1000.0
 
+                # el auto salio
+                if (auto.pos) >= 15000:
+                    auto.fin == 1
+
+                #CHOQUE
                 if (auto.choque == 3):
                     auto.vel = 5
                     auto.choque = 0
@@ -100,8 +106,8 @@ while True:
                     auto.choque -= 1
                     auto.vel = 0
                 
-
-                if auto.pos == pos_adel:
+                if auto.pos >= pos_adel and pos_adel < 15000:
+                    #chequeamos que el de adelante no haya ya salido
                     print("choque")
                     auto.choque = 3
                     auto.vel = 0
@@ -111,8 +117,7 @@ while True:
                         if (carril.autos[i-1].choque == 3):
                             auto.vel = 0
                         else:
-                            auto.vel = 5 * carril.autos[i-1]   
-                                    
+                            auto.vel = 5 * carril.autos[i-1]                    
                 
             # obs: hacer que el ultimo avance 
             auto.t +=1
@@ -148,5 +153,5 @@ while True:
         sys.exit()
 
     # Limita la velocidad de actualización a 1 vez por segundo
-    reloj.tick(1)
+    reloj.tick(100) 
 
