@@ -10,7 +10,7 @@ import numpy as np
 
 
 class Auto:
-    def __init__(self, id:int, p:int, t:int, v:int, a:int, p_acel, p_ant, choque):
+    def __init__(self, id:int, p:int, t:int, v:int, a:int, p_ant, choque):
         self.id = id
         self.pos = p
         self.t_inicio = t # guardamos tiempo de entrada porque el de salida es el que queda guardado
@@ -18,82 +18,89 @@ class Auto:
         self.vel = v
         self.acel = a
         self.fin = 0
-        self.prob_acel = p_acel
         self.pos_ant = p_ant
         self.choque = 0
+
+        #randomizamos la personalidad (proba de que acelere o se mantenga)
+        rand = random.randint(0, 5)
+        if rand == 1:
+            self.media_acel = 0.3 #lento
+        elif rand == 2:
+            self.media_acel = 1.2 #rapido
+        else: 
+            self.media_acel = 1 #promedio
+
+        rand2 = random.randint(0, 5)
+        if rand2 == 1:
+            self.distraido = 0.1
+        elif rand2 == 2:
+            self.distraido = 0.7
+        else: 
+            self.distraido = 0.3 #promedio
+        
         
 
     def __repr__ (self):
         return str(self.__dict__)
     
+
     def final_recorrido(self):
         self.fin = 1
     
+
     def acelerar(self, pos_adel, pos_adel_ant):
-        '''un automóvil promedio puede acelerar en el rango de 4.9 m/s² a 9.8 m/s² en condiciones normales
-        --> puede aumentar su velocidad en 4.9 m/s o más en un segundo.
-        '''
+        '''un auto puede acelerar entre -4 y 2'''
 
         distancia_ant = pos_adel_ant - self.pos_ant
         distancia = pos_adel - self.pos
+        val_aceleracion = 0
         
         if (self.t == 0): 
             distancia_ant = 0
-        
-        
         
         # dif < 0 : me estoy acercando
         # dif > 0 : me estoy alejando
         dif = distancia - distancia_ant
 
 
-        # ???????? vel = vel + media * "t" + sqrt("t") * Z~N(0,1)
+        if(distancia >= 400): # re lejos
+            # esta lejos
+                val_aceleracion = random.normalvariate(self.media_acel, 0.5)
 
-        if(distancia >= 200): 
-            #esta muy lejos, no importa si ya estaba avanzando
-            val_aceleracion = random.normalvariate(4, 1)
-        
-        elif(distancia >= 100):
-            if (dif > 20):  # me estoy alejando mucho
-                val_aceleracion = random.normalvariate(3, 1)
-            elif (dif > 0): 
-                val_aceleracion = random.normalvariate(2, 1)
 
-            elif (dif < -20): 
-                val_aceleracion = random.normalvariate(-1, 1)
-            elif (dif < 0): 
-                val_aceleracion = random.normalvariate(1, 1)
+        elif(distancia >= 100): # distancia por encima de lo recomendado
+            if (dif < 0):
+                # me estoy acercando
+                val_aceleracion = random.normalvariate(self.media_acel-1, 0.5)
+            else: 
+                # me estoy alejando del de adelante
+                val_aceleracion = random.normalvariate(self.media_acel, 0.2)
+
             
-        elif(distancia >= 60): 
-            if (dif > 20):
-                val_aceleracion = random.normalvariate(1, 1)
-            elif (dif > 0): 
-                val_aceleracion = random.normalvariate(-1, 1)
-
-            elif (dif < -20): 
-                val_aceleracion = random.normalvariate(-3, 1)
-            elif (dif < 0): 
-                val_aceleracion = random.normalvariate(-2, 1)
-
-        elif (distancia >= 30): 
-            val_aceleracion = random.normalvariate(-7, 2)
-
         else: 
-            val_aceleracion = -10  # desacelera lo maximo que puede 
+            # distancia por debajo de lo recomendado                 
+            # reacciona?...
+            azar = random.randint(0, 1)
+            if azar < self.distraido:
+                #no
+                val_aceleracion = random.normalvariate(-3, 1) # Calcular si llega a frenar!!!!!? GIO                else:
+                #si
+                val_aceleracion = random.normalvariate(-2, 2) # no depende de si suele acelerar, va a frenar por seguridad
         
-        if(self.vel > 80/3.6):   # esta yendo a la maxima
-            val_aceleracion = random.normalvariate(-1, 1)
-        
-        if(self.vel == 80/3.6):   
-            val_aceleracion = 0
-
-        if random.random() < self.prob_acel: #decide si acelerar o no
-        # Calcula la aceleración en función del factor de aceleración máximo
-            self.acel = val_aceleracion
-            self.vel = self.vel + self.acel
+        if(self.vel + val_aceleracion > 80/3.6):   # esta yendo a mas de la maxima
+            if self.pos in range(4900, 5000) or self.pos in range(9900, 10000):
+                val_aceleracion = -4 
+                # meter distraccion
+            else: 
+                if val_aceleracion > 0:
+                    # meter distraccion
+                    val_aceleracion = -val_aceleracion
 
         if self.vel < 0:
             self.vel = 0
+
+        self.acel = val_aceleracion
+        self.vel = self.vel + self.acel
 
         # chequear choque
         # dist en t - dist en (t-1) --> % de que tanto me estoy acrecando
