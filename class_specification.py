@@ -26,7 +26,7 @@ class Auto:
         if rand == 1:
             self.media_acel = 0.3 #lento
         elif rand == 2:
-            self.media_acel = 1.2 #rapido
+            self.media_acel = 1.5 #rapido
         else: 
             self.media_acel = 1 #promedio
 
@@ -71,7 +71,7 @@ class Auto:
         elif(distancia >= 100): # distancia por encima de lo recomendado
             if (dif < 0):
                 # me estoy acercando
-                val_aceleracion = random.normalvariate(self.media_acel-1, 0.5)
+                val_aceleracion = random.normalvariate(self.media_acel-0.5, 0.5)
             else: 
                 # me estoy alejando del de adelante
                 val_aceleracion = random.normalvariate(self.media_acel, 0.2)

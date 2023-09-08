@@ -148,7 +148,7 @@ while True:
 
         nuevo_auto = Auto(i_nuevo, 0, t, vel, 0, 0, 0)
         carril.autos.append(nuevo_auto)
-        pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos), window_height // 2), 2)
+        pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos), window_height // 2), 3)
 
     else:
         if t % 15 == 0 and carril.autos[len(carril.autos)-1].pos > 30:
@@ -163,7 +163,7 @@ while True:
             nuevo_auto = Auto(i_nuevo, 0, t, vel, 0, 0, 0)
 
             carril.autos.append(nuevo_auto)
-            pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos), window_height // 2), 2)
+            pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos), window_height // 2), 3)
 
 
     
