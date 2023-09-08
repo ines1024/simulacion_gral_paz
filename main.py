@@ -19,7 +19,7 @@ max_vel = 80/3.6
 
 autos: list[Auto] = []
 i: int = 0
-dist = 14500
+dist = 14700
 
 #inicializamos el carril (ponemos los autos en el lugar)
 while (dist > 0):
@@ -27,7 +27,7 @@ while (dist > 0):
     auto_i: Auto = Auto(i, dist, 0, vel, 0, dist, 0) # id, pos, t, vel, acel, pos_ant, choque
     autos.append(auto_i)
     i+=1
-    dist -= 500
+    dist -= 300
 
 # el primer auto de la lista es el mas cercano a llegar (id = 0)
 
@@ -135,19 +135,33 @@ while True:
         i+=1
 
     # Regulamos la densidad del trafico (metemos nuevos autos)
-    if ((t in range(7*360, 11*360) or t in range(16*360, 20*360)) and t % 3 == 0): 
+    if ((t in range(7*360, 11*360) or t in range(16*360, 20*360)) and t % 3 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
         # Agrega un nuevo auto 
         i_nuevo = len(carril.autos)
-        nuevo_auto = Auto(i_nuevo, 0, t, vel, 0, 0)
+
+        if carril.autos[len(carril.autos)-1].pos > 200:
+            vel = np.random.randint(min_vel, max_vel)
+        elif carril.autos[len(carril.autos)-1].pos > 60:
+            vel = np.random.randint(min_vel, 70/3.6)
+        else: 
+            vel = np.random.randint(40/3.6, 60/3.6)  
+
+        nuevo_auto = Auto(i_nuevo, 0, t, vel, 0, 0, 0)
         carril.autos.append(nuevo_auto)
         pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos), window_height // 2), 2)
 
     else:
-        if t % 15 == 0:
+        if t % 15 == 0 and carril.autos[len(carril.autos)-1].pos > 30:
             # Agrega un nuevo auto 
             i_nuevo = len(carril.autos)
-            vel = ?
-            nuevo_auto = Auto(i_nuevo, 0, t, vel, 0, 0)
+            if carril.autos[len(carril.autos)-1].pos > 200:
+                vel = np.random.randint(min_vel, max_vel)
+            elif carril.autos[len(carril.autos)-1].pos > 60:
+                vel = np.random.randint(min_vel, 70/3.6)
+            else: 
+                vel = np.random.randint(40/3.6, 60/3.6)
+            nuevo_auto = Auto(i_nuevo, 0, t, vel, 0, 0, 0)
+
             carril.autos.append(nuevo_auto)
             pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos), window_height // 2), 2)
 
@@ -167,5 +181,5 @@ while True:
         sys.exit()
 
     # Limita la velocidad de la animación a 100 fotogramas por segundo
-    reloj.tick(100) 
+    reloj.tick(50) 
 
