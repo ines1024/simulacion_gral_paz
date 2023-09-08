@@ -83,9 +83,9 @@ while True:
             sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                posicion_actual -= 2000  # Mueve 100 metros a la izquierda
+                posicion_actual -= 1000  # Mueve 100 metros a la izquierda
             elif event.key == pygame.K_RIGHT:
-                posicion_actual += 2000  # Mueve 100 metros a la derecha
+                posicion_actual += 1000  # Mueve 100 metros a la derecha
                 
     # Asegúrate de que la posición actual esté dentro de los límites del tramo
     posicion_actual = max(0, min(15000 - window_width, posicion_actual))
@@ -159,7 +159,7 @@ while True:
         i+=1
 
         # Regulamos la densidad del trafico (metemos nuevos autos)
-        if ((t in range(7*3600, 11*3600) or t in range(16*3600, 20*3600)) and t % 5 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (t % 15 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
+        if ((t in range(7*3600, 11*3600) or t in range(16*3600, 20*3600)) and t % 5 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (t % 100 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
             # Agrega un nuevo auto 
             i_nuevo = len(carril.autos)
 
@@ -174,9 +174,9 @@ while True:
             carril.autos.append(nuevo_auto)
             pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
             
-            # Graficamos la posicion de las camaras
-            pygame.draw.circle(window, naranja, (5000- tramo_visible[0], window_height // 2), 3.5)
-            pygame.draw.circle(window, naranja, (10000- tramo_visible[0], window_height // 2), 3.5)
+        # Graficamos la posicion de las camaras
+        pygame.draw.circle(window, naranja, (int(5500- tramo_visible[0]), window_height // 2), 3.5)
+        pygame.draw.circle(window, naranja, (int(10500- tramo_visible[0]), window_height // 2), 3.5)
     # imprimimos el tiempo
     if (t%3600 == 0):
         print(t/3600)

@@ -20,13 +20,14 @@ class Auto:
         self.fin = 0
         self.pos_ant = p_ant
         self.choque = 0
+        self.multas = 0
 
         #randomizamos la personalidad (proba de que acelere o se mantenga)
         rand = random.randint(0, 5)
         if rand == 1: #lento
-            self.vel_prefe = random.normalvariate(50/3.6, 5/3.6)
+            self.vel_prefe = random.normalvariate(60/3.6, 5/3.6)
         elif rand == 2 or rand == 3: #rapido
-            self.vel_prefe = random.normalvariate(90/3.6, 5/3.6) 
+            self.vel_prefe = random.normalvariate(85/3.6, 5/3.6) 
         else: 
             self.vel_prefe = random.normalvariate(75/3.6, 5/3.6) 
 
@@ -68,7 +69,6 @@ class Auto:
         else: 
             dif = distancia / self.vel
 
-
             if(dif > 3):
                 # esta lejos
                 if (self.vel < self.vel_prefe):
@@ -76,11 +76,11 @@ class Auto:
                 else: 
                     val_aceleracion = 0
                 
-            elif(dif > 1.5): # distancia por encima de lo recomendado
+            elif(dif > 0.55): # distancia por encima de lo recomendado
                 if (self.vel < self.vel_prefe):
-                    val_aceleracion = random.normalvariate(0.5, 1)
+                    val_aceleracion = random.normalvariate(1.2, 0.5)
                 elif (self.vel > self.vel_prefe):
-                    val_aceleracion = random.normalvariate(0, 0.5)
+                    val_aceleracion = random.normalvariate(0.5, 0.5)
                 
             else: # distancia por debajo de lo recomendado                 
                 # se distrajo?...
@@ -90,7 +90,7 @@ class Auto:
                     val_aceleracion = 0 
                 else:
                     #no
-                    val_aceleracion = random.normalvariate(-2, 1) # no depende de si suele acelerar, va a frenar por seguridad
+                    val_aceleracion = random.normalvariate(-3, 1) # no depende de si suele acelerar, va a frenar por seguridad
             
 
             self.acel = val_aceleracion
@@ -100,43 +100,27 @@ class Auto:
                 # esta yendo a mas de la maxima
 
                 # hay camaras 
-                if self.pos in range(4900, 5000) or self.pos in range(9900, 10000):
+                if self.pos in range(5400, 5500) or self.pos in range(10400, 10500):
                     azar = random.randint(0, 1)
                     if azar < self.distraido:
                     # no se distrajo
-                        val_aceleracion = -4
+                        val_aceleracion = random.normalvariate(-3,1)
 
                 # no hay
                 else: 
                     if self.vel > self.vel_prefe and val_aceleracion > 0:
                         # meter distraccion
-                        val_aceleracion = random.normalvariate(-1, 0.5)
-                        self.vel = self.vel + self.acel + random.normalvariate(0, 2)
+                        val_aceleracion = random.normalvariate(-2, 1)
+
+            self.acel = val_aceleracion
+            self.vel = self.vel + self.acel + random.normalvariate(0, 1)
 
             if self.vel < 0:
                 self.vel = 0
 
-        # chequear choque
-        # dist en t - dist en (t-1) --> % de que tanto me estoy acrecando
-        # conductores con distintas probas de acercarse 
-        # desacelerar si estoy muy cerca de la vel maxima 
-        
-
-         # # Calcular la desaceleración necesaria para evitar una colisión
-            # desaceleracion = (self.vel**2 - vel_adel**2) / (2 * distancia)
-
-            # # Introducimos aleatoriedad en el tiempo de reacción
-            # tiempo_reaccion = random.normalvariate(2, 0.5)
-
-            # # Calcular la probabilidad de choque
-            # probabilidad_choque = calcular_probabilidad_choque(desaceleracion, tiempo_reaccion)
-
-            # # Simular si ocurre un choque
-            # if random.random() < probabilidad_choque:
-            #     print("¡Choque!")
-            # else:
-            #     # Aplicar la desaceleración y actualizar la velocidad
-            #     self.velocidad -= desaceleracion
+            if self.vel > 80/3.6 and (self.pos < 5500 and (self.vel + self.pos >= 5500)) or (self.pos < 10500 and (self.vel + self.pos >= 10500)):
+                self.multas +=1
+                print("multa!", self.vel)
 
         
 
