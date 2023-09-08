@@ -48,6 +48,7 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 verde = (0, 255, 0)
 rojo = (255, 0, 0)
+naranja = (255, 128, 0)
 
 # Longitud total de la línea (15000 metros)           
 longitud = 15000
@@ -150,7 +151,7 @@ while True:
             # pos_en_ventana = int(auto.pos*escala)
             # pygame.draw.circle(window, point_color, (int(pos_en_ventana), window_height // 2), 3)
             if tramo_visible[0] <= auto.pos <= tramo_visible[1]:
-                pos_en_ventana = int((auto.pos - tramo_visible[0]))
+                pos_en_ventana = int(auto.pos - tramo_visible[0])
                 if auto.choque > 1:
                     pygame.draw.circle(window, rojo, (pos_en_ventana, window_height // 2), 3)
                 else:
@@ -171,17 +172,15 @@ while True:
 
             nuevo_auto = Auto(i_nuevo, 0, t, vel, 0, 0, 0)
             carril.autos.append(nuevo_auto)
-            pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos), window_height // 2), 3)
+            pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
+            
+            # Graficamos la posicion de las camaras
+            pygame.draw.circle(window, naranja, (5000- tramo_visible[0], window_height // 2), 3.5)
+            pygame.draw.circle(window, naranja, (10000- tramo_visible[0], window_height // 2), 3.5)
+    # imprimimos el tiempo
+    if (t%3600 == 0):
+        print(t/3600)
 
-        if (t%3600 == 0):
-            print(t/3600)
-        
-
-
-    
-
-    # Dibuja los puntos en sus nuevas posiciones
-    #for i in range(len(carril.autos)):
 
     # Actualiza la pantalla
     pygame.display.update()
