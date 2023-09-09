@@ -50,10 +50,6 @@ verde = (0, 255, 0)
 rojo = (255, 0, 0)
 naranja = (255, 128, 0)
 
-# Longitud total de la línea (15000 metros)           
-longitud = 15000
-#escala = window_width / longitud
-
 ############################# SIMULACION
 
 # iniciamos la simulacion con autos cada 200 metros
@@ -104,7 +100,6 @@ while True:
     for auto in carril.autos:
 
         if (auto.fin == 0): # el auto todavia no termino
-        # pensar ratio de vel ~ pos del de adelante (que define cuanto acelera)
 
             if (i == 0): 
                 # es el ultimo auto (no tiene adelante)
@@ -114,7 +109,11 @@ while True:
 
 
             elif (i < len(carril.autos)):
-                pos_adel = carril.adelante(i-1)
+                if carril.autos[i-1].fin == 1:
+                    # el de adelante ya salio
+                    pos_adel = 20000
+                else: 
+                    pos_adel = carril.autos[i-1].pos # id del de adelante es i-1
                 auto.acelerar(pos_adel)
                 auto.pos_ant = auto.pos
                 auto.pos += (auto.vel) * reloj.get_time() /1000.0
@@ -122,39 +121,40 @@ while True:
                 # el auto salio
                 if (auto.pos) >= 15000:
                     auto.fin == 1
+                    if (i > 15):
+                        print("salio:", i, ", tardo:", t-auto.t_inicio)
 
                 #CHOQUE
-                if (auto.choque == 3):
-                    auto.vel = 5
-                    auto.choque = 0
-
                 if (auto.choque > 0):
-                    auto.choque -= 1
-                    auto.vel = 0
+                    auto.choque = 0
                 
                 if auto.pos >= pos_adel and pos_adel < 15000:
                     #chequeamos que el de adelante no haya ya salido
-                    print("choque", auto.pos)
-                    auto.choque = 3
+                    print("____________________________________________")
+                    print("choque del auto", i,"a ", i-1, ",en t=", t)
+                    print("____________________________________________")
+                    auto.choque = 1
                     auto.vel = 0
+                    carril.autos[i-1].vel = 0
 
-                if (i < len(carril.autos)-1): 
-                    if (carril.autos[i+1].choque > 0):
-                        if (carril.autos[i+1].choque == 3):
-                            auto.vel = 0
-                        else:
-                            auto.vel = 5 * carril.autos[i+1]     
+                 
+                # if (carril.autos[i+1].choque > 0): 
+                #     # el de atras me choco
+                #     auto.vel = 0  
 
                 if auto.vel > 81/3.6 and (auto.pos_ant < 5500 and auto.pos >= 5500): 
                     auto.multas +=1
-                    print("multa 1", auto.vel*3.6, "prefe:", auto.vel_prefe*3.6)
+                    #print("multa a", auto.vel*3.6)
+                    #print("multa 1", auto.vel*3.6, "prefe:", auto.vel_prefe*3.6)
 
                 if auto.vel > 81/3.6 and (auto.pos_ant < 10500 and auto.pos >= 10500): 
                     auto.multas +=1
                     #print("multa 2", auto.vel*3.6, auto.id) 
 
-                if auto.pos_ant < 5500 and auto.pos >= 5500:
-                    print("paso a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
+                # if auto.pos_ant < 5500 and auto.pos >= 5500:
+                #     print("CAMARA a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
+                # if auto.pos_ant < 3000 and auto.pos >= 3000:
+                #     print("OTRO a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
                            
                 
             
@@ -164,23 +164,23 @@ while True:
             # pygame.draw.circle(window, point_color, (int(pos_en_ventana), window_height // 2), 3)
             if tramo_visible[0] <= auto.pos <= tramo_visible[1]:
                 pos_en_ventana = int(auto.pos - tramo_visible[0])
-                if auto.choque > 1:
+                if auto.choque > 0:
                     pygame.draw.circle(window, rojo, (pos_en_ventana, window_height // 2), 3)
                 else:
                     pygame.draw.circle(window, verde, (pos_en_ventana, window_height // 2), 3)
         i+=1
 
         # Regulamos la densidad del trafico (metemos nuevos autos)
-        if ((t in range(7*3600, 11*3600) or t in range(16*3600, 20*3600)) and t % 5 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (t % 30 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
+        if ((t in range(7*3600, 11*3600) or t in range(16*3600, 20*3600)) and t % 3 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (t % 30 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
             # Agrega un nuevo auto 
             i_nuevo = len(carril.autos)
 
             if carril.autos[len(carril.autos)-1].pos > 200:
-                vel = random.normalvariate(80/3.6, 30/3.6)
+                vel = random.normalvariate(80/3.6, 15/3.6)
             elif carril.autos[len(carril.autos)-1].pos > 60:
-                vel = random.normalvariate(80/3.6, 20/3.6)
+                vel = random.normalvariate(80/3.6, 10/3.6)
             else: 
-                vel = random.normalvariate(40/3.6, 10/3.6)
+                vel = random.normalvariate(30/3.6, 10/3.6)
 
             nuevo_auto = Auto(i_nuevo, 0, t, vel, 0, 0, 0)
             carril.autos.append(nuevo_auto)
@@ -204,5 +204,5 @@ while True:
         sys.exit()
 
     # Limita la velocidad de la animación a 100 fotogramas por segundo
-    reloj.tick(1000) 
+    reloj.tick(10000) 
 
