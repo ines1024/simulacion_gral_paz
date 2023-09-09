@@ -23,8 +23,8 @@ dist = 14900
 
 #inicializamos el carril (ponemos los autos en el lugar)
 while (dist > 0):
-    vel = random.normalvariate(80/3.6, 30/3.6) 
-    auto_i: Auto = Auto(i, dist, 0, vel, 0, dist, 0) # id, pos, t, vel, acel, pos_ant, choque
+    auto_i: Auto = Auto(i, dist, 0, 0, 0, dist, 0) # id, pos, t, vel, acel, pos_ant, choque
+    auto_i.vel = auto_i.vel_prefe
     autos.append(auto_i)
     i+=1
     dist -= 100
@@ -143,7 +143,19 @@ while True:
                         if (carril.autos[i+1].choque == 3):
                             auto.vel = 0
                         else:
-                            auto.vel = 5 * carril.autos[i+1]                    
+                            auto.vel = 5 * carril.autos[i+1]     
+
+                if auto.vel > 81/3.6 and (auto.pos_ant < 5500 and auto.pos >= 5500): 
+                    auto.multas +=1
+                    print("multa 1", auto.vel*3.6, "prefe:", auto.vel_prefe*3.6)
+
+                if auto.vel > 81/3.6 and (auto.pos_ant < 10500 and auto.pos >= 10500): 
+                    auto.multas +=1
+                    #print("multa 2", auto.vel*3.6, auto.id) 
+
+                if auto.pos_ant < 5500 and auto.pos >= 5500:
+                    print("paso a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
+                           
                 
             
             # obs: hacer que el ultimo avance 
@@ -159,7 +171,7 @@ while True:
         i+=1
 
         # Regulamos la densidad del trafico (metemos nuevos autos)
-        if ((t in range(7*3600, 11*3600) or t in range(16*3600, 20*3600)) and t % 5 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (t % 100 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
+        if ((t in range(7*3600, 11*3600) or t in range(16*3600, 20*3600)) and t % 5 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (t % 30 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
             # Agrega un nuevo auto 
             i_nuevo = len(carril.autos)
 
@@ -192,5 +204,5 @@ while True:
         sys.exit()
 
     # Limita la velocidad de la animación a 100 fotogramas por segundo
-    reloj.tick(100) 
+    reloj.tick(1000) 
 

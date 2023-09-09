@@ -25,7 +25,7 @@ class Auto:
         #randomizamos la personalidad (proba de que acelere o se mantenga)
         rand = random.randint(0, 5)
         if rand == 1: #lento
-            self.vel_prefe = random.normalvariate(50/3.6, 5/3.6)
+            self.vel_prefe = random.normalvariate(65/3.6, 5/3.6)
         elif rand == 2 or rand == 3: #rapido
             self.vel_prefe = random.normalvariate(85/3.6, 5/3.6) 
         else: 
@@ -72,15 +72,21 @@ class Auto:
             if(dif > 2):
                 # esta lejos
                 if (self.vel < self.vel_prefe):
-                    val_aceleracion = random.normalvariate(1.7, 0.3)
+                    val_aceleracion = random.normalvariate(1.5, 0.5)
                 else: 
-                    val_aceleracion = 0
+                    val_aceleracion = random.normalvariate(1.3, 0.5)
                 
-            elif(dif > 0.55): # distancia por encima de lo recomendado
+            elif(dif > 1): # distancia por encima de lo recomendado
                 if (self.vel < self.vel_prefe):
-                    val_aceleracion = random.normalvariate(1.2, 0.5)
+                    val_aceleracion = random.normalvariate(1.3, 0.7)
                 elif (self.vel > self.vel_prefe):
-                    val_aceleracion = random.normalvariate(0.5, 0.5)
+                    val_aceleracion = random.normalvariate(0.5, 0.8)
+
+            elif (dif > 0.5):
+                if (self.vel < self.vel_prefe):
+                    val_aceleracion = random.normalvariate(1, 0.5)
+                elif (self.vel > self.vel_prefe):
+                    val_aceleracion = random.normalvariate(0, 1)
                 
             else: # distancia por debajo de lo recomendado                 
                 # se distrajo?...
@@ -94,15 +100,15 @@ class Auto:
             
 
             self.acel = val_aceleracion
-            self.vel = self.vel + self.acel + random.normalvariate(0, 2)
+            self.vel = self.vel + self.acel + random.normalvariate(0, 0.8)
 
             if(self.vel > 80/3.6):   
                 # esta yendo a mas de la maxima
 
                 # hay camaras 
-                if self.pos in range(5400, 5500) or self.pos in range(10400, 10500):
+                if self.pos in range(5300, 5500) or self.pos in range(10300, 10500):
                     azar = random.randint(0, 1)
-                    if azar < self.distraido:
+                    if azar > self.distraido:
                     # no se distrajo
                         val_aceleracion = random.normalvariate(-3,1)
 
@@ -118,12 +124,7 @@ class Auto:
             if self.vel < 0:
                 self.vel = 0
 
-            if self.vel > 80/3.6 and (self.pos < 5500 and (self.vel + self.pos >= 5500)) or (self.pos < 10500 and (self.vel + self.pos >= 10500)):
-                self.multas +=1
-                print("multa!", self.vel)
-
-        
-
+            
 
 class Carril:
     def __init__(self, autos:list[Auto]):
