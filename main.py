@@ -36,9 +36,7 @@ while (dist > 0):
 pygame.init()
 
 # Configuración de la ventana
-ancho_inicial = 1000
-escala_tiempo = 10
-window_width = ancho_inicial 
+window_width = 1000
 window_height = 200
 window = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("General Paz")
@@ -58,6 +56,8 @@ carril: Carril = Carril(autos)
 
 # arranca el tiempo
 t = 0
+escala_tiempo = 15
+escala = window_width / 2500
 
 posicion_actual = 0
 
@@ -69,8 +69,7 @@ tiempo_total = 86400  # Tiempo total de simulación en segundos
 reloj = pygame.time.Clock()
 # Tiempo de inicio de la animación
 tiempo_inicio = time.time()
-        
-escala_tiempo = 5
+
 
 # GRAFICO
 while True:
@@ -80,16 +79,15 @@ while True:
             sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                posicion_actual -= 1000  # Mueve 100 metros a la izquierda
+                posicion_actual -= 2500  # Mueve 100 metros a la izquierda
             elif event.key == pygame.K_RIGHT:
-                posicion_actual += 1000  # Mueve 100 metros a la derecha
+                posicion_actual += 2500  # Mueve 100 metros a la derecha
                 
     # Asegúrate de que la posición actual esté dentro de los límites del tramo
-    posicion_actual = max(0, min(15000 - window_width, posicion_actual))
+    posicion_actual = max(0, min(15000 - 2500, posicion_actual)) 
 
     # Actualiza el ancho de la ventana según la posición actual
-    window_width = 1000  # Ancho fijo de la ventana
-    tramo_visible = (posicion_actual, posicion_actual + window_width)
+    tramo_visible = (posicion_actual, posicion_actual + 2500)
 
     # Limpia la pantalla
     window.fill(white)
@@ -106,7 +104,7 @@ while True:
                 # es el ultimo auto (no tiene adelante)
                 auto.acelerar(20000)
                 auto.pos_ant = auto.pos
-                auto.pos += (auto.vel) * (reloj.get_time()/1000) * escala_tiempo
+                auto.pos += (auto.vel) * (reloj.get_time()/1000) * escala_tiempo 
                 # el auto salio
 
             elif (i < len(carril.autos)):
@@ -122,15 +120,13 @@ while True:
                 # el auto salio
                 if (auto.pos) >= 15000:
                     auto.fin = 1
-                    # if (i > 15):
-                    #     print("salio:", i, ", tardo:", t-auto.t_inicio)
                 
-                if(i==140):
-                    print(t, "POS:", auto.pos, "yendo a ", auto.vel*3.6)
+                # if(i==140):
+                #     print(t, "POS:", auto.pos, "yendo a ", auto.vel*3.6)
 
-                #CHOQUE
-                if (auto.choque > 0):
-                    auto.choque = 0
+                # #CHOQUE
+                # if (auto.choque > 0):
+                #     auto.choque = 0
                 
                 if auto.pos >= pos_adel and pos_adel < 15000:
                     #chequeamos que el de adelante no haya ya salido
@@ -141,11 +137,6 @@ while True:
                     auto.vel = 0
                     carril.autos[i-1].vel = 0
 
-                 
-                # if (carril.autos[i+1].choque > 0): 
-                #     # el de atras me choco
-                #     auto.vel = 0  
-
                 if auto.vel > 81/3.6 and (auto.pos_ant < 5500 and auto.pos >= 5500): 
                     auto.multas +=1
                     # print("multa a", auto.vel*3.6)
@@ -155,19 +146,17 @@ while True:
                     auto.multas +=1
                     #print("multa 2", auto.vel*3.6, auto.id) 
 
-                # if auto.pos_ant < 5500 and auto.pos >= 5500:
-                #     print("CAMARA a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
+                if auto.pos_ant < 5500 and auto.pos >= 5500:
+                    print("CAMARA a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
                 # if auto.pos_ant < 3000 and auto.pos >= 3000:
                 #     print("OTRO a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
                            
                 
             
             # obs: hacer que el ultimo avance 
-            auto.t +=1
-            # pos_en_ventana = int(auto.pos*escala)
-            # pygame.draw.circle(window, point_color, (int(pos_en_ventana), window_height // 2), 3)
+            auto.t += 1 * (reloj.get_time() /1000.0) * escala_tiempo
             if tramo_visible[0] <= auto.pos <= tramo_visible[1]:
-                pos_en_ventana = int(auto.pos - tramo_visible[0])
+                pos_en_ventana = int(auto.pos - tramo_visible[0]) * escala
                 if auto.choque > 0:
                     pygame.draw.circle(window, rojo, (pos_en_ventana, window_height // 2), 3)
                 else:
@@ -175,7 +164,7 @@ while True:
         i+=1
 
         # Regulamos la densidad del trafico (metemos nuevos autos)
-        if ((int(t) in range(7*3600, 11*3600) or int(t) in range(16*3600, 20*3600)) and int(t) % 3 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (int(t) % 30 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
+        if ((int(t) in range(7*3600, 11*3600) or int(t) in range(16*3600, 20*3600)) and int(t) % 2 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (int(t) % 10 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
             # Agrega un nuevo auto 
             i_nuevo = len(carril.autos)
 
@@ -191,13 +180,15 @@ while True:
             pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
             
         # Graficamos la posicion de las camaras
-        pygame.draw.circle(window, naranja, (int(5500- tramo_visible[0]), window_height // 2), 3.5)
-        pygame.draw.circle(window, naranja, (int(10500- tramo_visible[0]), window_height // 2), 3.5)
+        pygame.draw.circle(window, naranja, (int(5500- tramo_visible[0])*escala, window_height // 2), 3.5)
+        pygame.draw.circle(window, naranja, (int(10500- tramo_visible[0])*escala, window_height // 2), 3.5)
 
 
-    # imprimimos el tiempo
-    # if (int(t / reloj.get_time() /1000.0)%3600 == 0):
-    #     print((t / reloj.get_time() /1000.0)/3600)
+
+    # imprimimos el tiempo cada nueva hora
+    if (reloj.get_time() > 0):
+        if (int(t) % 3600 == 0):
+            print(int(t)/3600)
 
 
     # Actualiza la pantalla
@@ -210,4 +201,4 @@ while True:
         sys.exit()
 
     # Limita la velocidad de la animación a 4 fotogramas por segundo
-    reloj.tick(3600)
+    reloj.tick(60)
