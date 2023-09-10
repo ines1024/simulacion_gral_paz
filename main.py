@@ -70,7 +70,7 @@ reloj = pygame.time.Clock()
 # Tiempo de inicio de la animación
 tiempo_inicio = time.time()
         
-
+escala_tiempo = 5
 
 # GRAFICO
 while True:
@@ -106,7 +106,7 @@ while True:
                 # es el ultimo auto (no tiene adelante)
                 auto.acelerar(20000)
                 auto.pos_ant = auto.pos
-                auto.pos += (auto.vel) * reloj.get_time()/1000
+                auto.pos += (auto.vel) * (reloj.get_time()/1000) * escala_tiempo
                 # el auto salio
 
             elif (i < len(carril.autos)):
@@ -117,15 +117,16 @@ while True:
                     pos_adel = carril.autos[i-1].pos # id del de adelante es i-1
                 auto.acelerar(pos_adel)
                 auto.pos_ant = auto.pos
-                auto.pos += (auto.vel)  * reloj.get_time()/1000
+                auto.pos += (auto.vel)  * (reloj.get_time()/1000) * escala_tiempo
+
                 # el auto salio
                 if (auto.pos) >= 15000:
-                    auto.fin == 1
+                    auto.fin = 1
                     # if (i > 15):
                     #     print("salio:", i, ", tardo:", t-auto.t_inicio)
                 
                 if(i==140):
-                    print(t, "POS:", auto.pos)
+                    print(t, "POS:", auto.pos, "yendo a ", auto.vel*3.6)
 
                 #CHOQUE
                 if (auto.choque > 0):
@@ -147,17 +148,17 @@ while True:
 
                 if auto.vel > 81/3.6 and (auto.pos_ant < 5500 and auto.pos >= 5500): 
                     auto.multas +=1
-                    print("multa a", auto.vel*3.6)
-                    print("multa 1", auto.vel*3.6, "prefe:", auto.vel_prefe*3.6)
+                    # print("multa a", auto.vel*3.6)
+                    # print("multa 1", auto.vel*3.6, "prefe:", auto.vel_prefe*3.6)
 
                 if auto.vel > 81/3.6 and (auto.pos_ant < 10500 and auto.pos >= 10500): 
                     auto.multas +=1
                     #print("multa 2", auto.vel*3.6, auto.id) 
 
-                if auto.pos_ant < 5500 and auto.pos >= 5500:
-                    print("CAMARA a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
-                if auto.pos_ant < 3000 and auto.pos >= 3000:
-                    print("OTRO a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
+                # if auto.pos_ant < 5500 and auto.pos >= 5500:
+                #     print("CAMARA a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
+                # if auto.pos_ant < 3000 and auto.pos >= 3000:
+                #     print("OTRO a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
                            
                 
             
@@ -174,7 +175,7 @@ while True:
         i+=1
 
         # Regulamos la densidad del trafico (metemos nuevos autos)
-        if ((t in range(7*3600, 11*3600) or t in range(16*3600, 20*3600)) and t % 3 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (t % 30 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
+        if ((int(t) in range(7*3600, 11*3600) or int(t) in range(16*3600, 20*3600)) and int(t) % 3 == 0 and carril.autos[len(carril.autos)-1].pos > 30) or (int(t) % 30 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
             # Agrega un nuevo auto 
             i_nuevo = len(carril.autos)
 
@@ -195,18 +196,18 @@ while True:
 
 
     # imprimimos el tiempo
-    if (int(t* reloj.get_time() /1000.0)%3600 == 0):
-        print((t* reloj.get_time() /1000.0)/3600)
+    # if (int(t / reloj.get_time() /1000.0)%3600 == 0):
+    #     print((t / reloj.get_time() /1000.0)/3600)
 
 
     # Actualiza la pantalla
     pygame.display.update()
 
     # Comprueba si la animación ha alcanzado la duración deseada y cierra la ventana
-    t += 1 * reloj.get_time() /1000.0
+    t += 1 * (reloj.get_time() /1000.0) * escala_tiempo
     if t == tiempo_total:
         pygame.quit()
         sys.exit()
 
     # Limita la velocidad de la animación a 4 fotogramas por segundo
-    reloj.tick(10)
+    reloj.tick(3600)
