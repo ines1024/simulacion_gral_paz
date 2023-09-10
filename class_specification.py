@@ -124,12 +124,12 @@ class Auto:
             if(self.vel > 80/3.6):   
                 # hay camaras 
                 if int(self.pos) in range(5300, 5510) or int(self.pos) in range(10300, 10510):
-                    azar = random.randint(0, 1)
-                    if azar > self.distraido:
+                    # azar = random.randint(0, 1)
+                    # if azar > self.distraido:
                     # no se distrajo
-                        val_aceleracion = random.normalvariate(-2,2)
-                    else:
-                        val_aceleracion = 0
+                    val_aceleracion = random.normalvariate(-2,2)
+                    # else:
+                    #     val_aceleracion = 0
                     
 
             self.acel = val_aceleracion
