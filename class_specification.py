@@ -76,24 +76,30 @@ class Auto:
         else: 
             dif = distancia / self.vel 
 
-            if(dif > 3/time_scale):
+            if(distancia > 200):
                 # esta lejos
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.7, 0.3)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-1, 0.5)
 
-            elif(dif > 2/time_scale): # distancia por encima de lo recomendado
+            elif(distancia > 100): # distancia por encima de lo recomendado
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.4, 0.1)
                 else:
-                    val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-1, 0.1)
 
-            elif (dif > 1/time_scale):
+            elif (distancia > 80):
                 if (self.vel < vel_adel):
-                    val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.5, 0.1)
                 else:
-                    val_aceleracion = random.normalvariate(self.media_acel-3, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
+            
+            elif (distancia > 40):
+                if (self.vel < vel_adel):
+                    val_aceleracion = random.normalvariate(self.media_acel, 0.1)
+                else:
+                    val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
                 
             else: # distancia por debajo de lo recomendado                 
                 # se distrajo?...
@@ -111,7 +117,7 @@ class Auto:
                     # azar = random.randint(0, 1)
                     # if azar > self.distraido:
                     # no se distrajo
-                    val_aceleracion = random.normalvariate(-2,2)
+                    val_aceleracion = random.normalvariate(-3,1)
                     # else:
                     #     val_aceleracion = 0
                     
@@ -128,26 +134,6 @@ class Auto:
 class Carril:
     def __init__(self, autos:list[Auto]):
         self.autos = autos
-        self.t = 0
-        self.t_ant = 0
+        self.multas = {}
         
-
-    def adelante(self, i):
-        # i es el id del de adelante
-        if self.autos[i].fin == 1:
-            # el de adelante ya salio
-            return 20000
-        pos = self.autos[i].pos
-        vel = self.autos[i].vel
-        # devuelve los valores del de adelante
-        return (pos, vel)
-    
-    # def atras(self, i):
-    #     if i == len(self.autos)-1:
-    #         # es el ultimo que entro
-    #         return (-1000, -100000)
-    #     pos_ant = self.autos[i].pos_ant
-    #     pos = self.autos[i].pos
-    #     # devuelve los valores del de atras
-    #     return (pos_ant, pos)
     
