@@ -43,9 +43,9 @@ class Auto:
         # distraccion
         rand2 = random.randint(0, 5)
         if rand2 == 1:
-            self.distraido = 0.7
-        elif rand2 == 2:
             self.distraido = 0.5
+        elif rand2 == 2:
+            self.distraido = 0.1
         else: 
             self.distraido = 0 #promedio
         
@@ -139,6 +139,7 @@ class Auto:
                 self.vel = 0
 
             
+            
 
 class Carril:
     def __init__(self, autos:list[Auto]):
@@ -151,8 +152,9 @@ class Carril:
             # el de adelante ya salio
             return 20000
         pos = self.autos[i].pos
+        vel = self.autos[i].vel
         # devuelve los valores del de adelante
-        return (pos)
+        return (pos, vel)
     
     # def atras(self, i):
     #     if i == len(self.autos)-1:

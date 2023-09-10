@@ -49,6 +49,9 @@ verde = (0, 255, 0)
 rojo = (255, 0, 0)
 naranja = (255, 128, 0)
 
+# Fuente
+font = pygame.font.SysFont("trebuchet ms", 36)
+
 ############################# SIMULACION
 
 # iniciamos la simulacion con autos cada 200 metros
@@ -102,7 +105,7 @@ while True:
 
             if (i == 0): 
                 # es el ultimo auto (no tiene adelante)
-                auto.acelerar(20000)
+                auto.acelerar(20000, 100)
                 auto.pos_ant = auto.pos
                 auto.pos += (auto.vel) * (reloj.get_time()/1000) * escala_tiempo 
                 # el auto salio
@@ -111,9 +114,11 @@ while True:
                 if carril.autos[i-1].fin == 1:
                     # el de adelante ya salio
                     pos_adel = 20000
+                    vel_adel = 100
                 else: 
                     pos_adel = carril.autos[i-1].pos # id del de adelante es i-1
-                auto.acelerar(pos_adel)
+                    vel_adel = carril.autos[i-1].vel
+                auto.acelerar(pos_adel, vel_adel)
                 auto.pos_ant = auto.pos
                 auto.pos += (auto.vel)  * (reloj.get_time()/1000) * escala_tiempo
 
@@ -182,6 +187,10 @@ while True:
         # Graficamos la posicion de las camaras
         pygame.draw.circle(window, naranja, (int(5500- tramo_visible[0])*escala, window_height // 2), 3.5)
         pygame.draw.circle(window, naranja, (int(10500- tramo_visible[0])*escala, window_height // 2), 3.5)
+
+        metros = f"de {tramo_visible[0]} hasta {tramo_visible[1]} metros"
+        text = font.render(metros,True,black)
+        window.blit(text, (40, 40))
 
 
 
