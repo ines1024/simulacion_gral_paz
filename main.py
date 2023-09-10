@@ -37,6 +37,7 @@ pygame.init()
 
 # Configuración de la ventana
 ancho_inicial = 1000
+escala_tiempo = 10
 window_width = ancho_inicial 
 window_height = 200
 window = pygame.display.set_mode((window_width, window_height))
@@ -105,8 +106,8 @@ while True:
                 # es el ultimo auto (no tiene adelante)
                 auto.acelerar(20000)
                 auto.pos_ant = auto.pos
-                auto.pos += (auto.vel) * reloj.get_time() /1000.0
-
+                auto.pos += (auto.vel) 
+                # el auto salio
 
             elif (i < len(carril.autos)):
                 if carril.autos[i-1].fin == 1:
@@ -116,13 +117,15 @@ while True:
                     pos_adel = carril.autos[i-1].pos # id del de adelante es i-1
                 auto.acelerar(pos_adel)
                 auto.pos_ant = auto.pos
-                auto.pos += (auto.vel) * reloj.get_time() /1000.0
-
+                auto.pos += (auto.vel) 
                 # el auto salio
                 if (auto.pos) >= 15000:
                     auto.fin == 1
-                    if (i > 15):
-                        print("salio:", i, ", tardo:", t-auto.t_inicio)
+                    # if (i > 15):
+                    #     print("salio:", i, ", tardo:", t-auto.t_inicio)
+                
+                # if(i==140):
+                #     print(t, "POS:", auto.pos)
 
                 #CHOQUE
                 if (auto.choque > 0):
@@ -130,9 +133,9 @@ while True:
                 
                 if auto.pos >= pos_adel and pos_adel < 15000:
                     #chequeamos que el de adelante no haya ya salido
-                    print("____________________________________________")
-                    print("choque del auto", i,"a ", i-1, ",en t=", t)
-                    print("____________________________________________")
+                    # print("____________________________________________")
+                    # print("choque del auto", i,"a ", i-1, ",en t=", t)
+                    # print("____________________________________________")
                     auto.choque = 1
                     auto.vel = 0
                     carril.autos[i-1].vel = 0
@@ -144,8 +147,8 @@ while True:
 
                 if auto.vel > 81/3.6 and (auto.pos_ant < 5500 and auto.pos >= 5500): 
                     auto.multas +=1
-                    #print("multa a", auto.vel*3.6)
-                    #print("multa 1", auto.vel*3.6, "prefe:", auto.vel_prefe*3.6)
+                    print("multa a", auto.vel*3.6)
+                    print("multa 1", auto.vel*3.6, "prefe:", auto.vel_prefe*3.6)
 
                 if auto.vel > 81/3.6 and (auto.pos_ant < 10500 and auto.pos >= 10500): 
                     auto.multas +=1
@@ -189,7 +192,11 @@ while True:
         # Graficamos la posicion de las camaras
         pygame.draw.circle(window, naranja, (int(5500- tramo_visible[0]), window_height // 2), 3.5)
         pygame.draw.circle(window, naranja, (int(10500- tramo_visible[0]), window_height // 2), 3.5)
+
+
     # imprimimos el tiempo
+
+    print(t)
     if (t%3600 == 0):
         print(t/3600)
 
@@ -203,6 +210,5 @@ while True:
         pygame.quit()
         sys.exit()
 
-    # Limita la velocidad de la animación a 100 fotogramas por segundo
-    reloj.tick(10000) 
-
+    # Limita la velocidad de la animación a 4 fotogramas por segundo
+    reloj.tick(1)
