@@ -79,3 +79,4 @@ while True:
 
     # Limita la velocidad de actualización a 1 vez por segundo
     reloj.tick(1)
+
