@@ -22,7 +22,7 @@ i: int = 0
 dist = 14900
 
 #inicializamos el carril (ponemos los autos en el lugar)
-while (dist > 0):
+while (dist == 14900):
     auto_i: Auto = Auto(i, dist, 0, 0, 0, dist, 0) # id, pos, t, vel, acel, pos_ant, choque
     auto_i.vel = (60/3.6)*60
     autos.append(auto_i)
@@ -116,7 +116,7 @@ while True:
 
             if (i == 0): 
                 # es el ultimo auto (no tiene adelante)
-                auto.acelerar(20000, 100)
+                auto.acelerar(20000, 100, time_scale)
                 auto.pos_ant = auto.pos
                 auto.pos += (auto.vel) * dt 
                 # el auto salio
@@ -131,7 +131,7 @@ while True:
                 else: 
                     pos_adel = carril.autos[i-1].pos # id del de adelante es i-1
                     vel_adel = carril.autos[i-1].vel
-                auto.acelerar(pos_adel, vel_adel)
+                auto.acelerar(pos_adel, vel_adel, time_scale)
                 auto.pos_ant = auto.pos 
                 auto.pos += (auto.vel) * dt 
 
@@ -148,24 +148,24 @@ while True:
             
                 if auto.pos >= pos_adel and pos_adel < 15000:
                     #chequeamos que el de adelante no haya ya salido
-                    # print("____________________________________________")
-                    # print("choque del auto", i,"a ", i-1, ",en t=", seg)
-                    # print("____________________________________________")
+                    print("____________________________________________")
+                    print("choque del auto", i,"a ", i-1, ",en t=", seg)
+                    print("____________________________________________")
                     auto.choque = 1
                     auto.vel = 0
                     carril.autos[i-1].vel = 0
 
-                if auto.vel > 81/3.6*60 and (auto.pos_ant < 5500 and auto.pos >= 5500): 
+                if auto.vel > 81/3.6*time_scale and (auto.pos_ant < 5500 and auto.pos >= 5500): 
                     auto.multas +=1
                     # print("multa a", auto.vel*3.6)
                     # print("multa 1", auto.vel*3.6, "prefe:", auto.vel_prefe*3.6)
 
-                if auto.vel > 81/3.6*60 and (auto.pos_ant < 10500 and auto.pos >= 10500): 
+                if auto.vel > 81/3.6*time_scale and (auto.pos_ant < 10500 and auto.pos >= 10500): 
                     auto.multas +=1
                     #print("multa 2", auto.vel*3.6, auto.id) 
 
                 if auto.pos_ant < 5500 and auto.pos >= 5500:
-                    print("CAMARA a", auto.vel*3.6/60)
+                    print("CAMARA a", auto.vel*3.6/time_scale)
                 # if auto.pos_ant < 3000 and auto.pos >= 3000:
                 #     print("OTRO a", auto.vel*3.6, ", prefe", auto.vel_prefe*3.6)
                 
@@ -191,7 +191,7 @@ while True:
             else: 
                 vel = random.normalvariate(30/3.6, 10/3.6)
 
-            nuevo_auto = Auto(i_nuevo, 0, seg, vel*60, 0, 0, 0)
+            nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0, 0)
             carril.autos.append(nuevo_auto)
             pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
             

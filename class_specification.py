@@ -30,7 +30,7 @@ class Auto:
             self.vel_prefe = random.normalvariate(85/3.6, 5/3.6) 
         else: 
             self.vel_prefe = random.normalvariate(75/3.6, 5/3.6) 
-        self.vel_prefe *= 60
+        self.vel_prefe *= 1
 
         #randomizamos la personalidad (proba de que acelere o se mantenga)
         rand1 = random.randint(0, 5)
@@ -59,7 +59,7 @@ class Auto:
         self.fin = 1
     
 
-    def acelerar(self, pos_adel, vel_adel):
+    def acelerar(self, pos_adel, vel_adel, time_scale):
         '''un auto puede acelerar entre -4 y 2'''
 
         distancia = pos_adel - self.pos
@@ -71,41 +71,41 @@ class Auto:
             if (distancia < 10):
                 self.vel = 0
             else: 
-                self.vel = 3  #avanzo poco 
+                self.vel =  30/3.6*time_scale  #avanzo poco 
         
         else: 
             dif = distancia / self.vel 
 
-            if(dif > 2/60):
+            if(dif > 3/time_scale):
                 # esta lejos
-                if (self.vel < 80/3.6*60):
-                    val_aceleracion = random.normalvariate(self.media_acel+0.1, 0.3)
+                if (self.vel < 80/3.6*time_scale):
+                    val_aceleracion = random.normalvariate(self.media_acel+0.7, 0.3)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-1, 0.5)
 
-            elif(dif > 1/60): # distancia por encima de lo recomendado
-                if (self.vel < 80/3.6*60):
-                    val_aceleracion = random.normalvariate(self.media_acel, 0.1)
+            elif(dif > 2/time_scale): # distancia por encima de lo recomendado
+                if (self.vel < 80/3.6*time_scale):
+                    val_aceleracion = random.normalvariate(self.media_acel+0.4, 0.1)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
 
-            elif (dif > 0.5/60):
-                if (self.vel < vel_adel*60):
-                    val_aceleracion = random.normalvariate(self.media_acel-1.5, 0.1)
+            elif (dif > 1/time_scale):
+                if (self.vel < vel_adel):
+                    val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-3, 0.1)
                 
             else: # distancia por debajo de lo recomendado                 
                 # se distrajo?...
-                azar = random.randint(0, 1)
-                if azar <= self.distraido:
-                    #si
-                    val_aceleracion = 0 
-                else:
-                    #no
-                    val_aceleracion = random.normalvariate(-3, 1) # no depende de si suele acelerar, va a frenar por seguridad
+                # azar = random.randint(0, 1)
+                # if azar <= self.distraido:
+                #     #si
+                #     val_aceleracion = 0 
+                # else:
+                #     #no
+                val_aceleracion = random.normalvariate(-3.7, 0.05) # no depende de si suele acelerar, va a frenar por seguridad
 
-            if(self.vel > 80/3.6*60):   
+            if(self.vel > 80/3.6*time_scale):   
                 # hay camaras 
                 if int(self.pos) in range(5300, 5510) or int(self.pos) in range(10300, 10510):
                     # azar = random.randint(0, 1)
@@ -116,8 +116,8 @@ class Auto:
                     #     val_aceleracion = 0
                     
 
-            self.acel = val_aceleracion
-            self.vel = self.vel + self.acel * 60
+            self.acel = val_aceleracion * time_scale
+            self.vel = self.vel + self.acel 
 
             if self.vel < 0:
                 self.vel = 0
