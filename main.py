@@ -106,7 +106,7 @@ while True:
                 # es el ultimo auto (no tiene adelante)
                 auto.acelerar(20000)
                 auto.pos_ant = auto.pos
-                auto.pos += (auto.vel) 
+                auto.pos += (auto.vel) * reloj.get_time()/1000
                 # el auto salio
 
             elif (i < len(carril.autos)):
@@ -117,15 +117,15 @@ while True:
                     pos_adel = carril.autos[i-1].pos # id del de adelante es i-1
                 auto.acelerar(pos_adel)
                 auto.pos_ant = auto.pos
-                auto.pos += (auto.vel) 
+                auto.pos += (auto.vel)  * reloj.get_time()/1000
                 # el auto salio
                 if (auto.pos) >= 15000:
                     auto.fin == 1
                     # if (i > 15):
                     #     print("salio:", i, ", tardo:", t-auto.t_inicio)
                 
-                # if(i==140):
-                #     print(t, "POS:", auto.pos)
+                if(i==140):
+                    print(t, "POS:", auto.pos)
 
                 #CHOQUE
                 if (auto.choque > 0):
@@ -133,9 +133,9 @@ while True:
                 
                 if auto.pos >= pos_adel and pos_adel < 15000:
                     #chequeamos que el de adelante no haya ya salido
-                    # print("____________________________________________")
-                    # print("choque del auto", i,"a ", i-1, ",en t=", t)
-                    # print("____________________________________________")
+                    print("____________________________________________")
+                    print("choque del auto", i,"a ", i-1, ",en t=", t)
+                    print("____________________________________________")
                     auto.choque = 1
                     auto.vel = 0
                     carril.autos[i-1].vel = 0
@@ -196,7 +196,6 @@ while True:
 
     # imprimimos el tiempo
 
-    print(t)
     if (t%3600 == 0):
         print(t/3600)
 
@@ -205,10 +204,10 @@ while True:
     pygame.display.update()
 
     # Comprueba si la animación ha alcanzado la duración deseada y cierra la ventana
-    t +=1
+    t += 1 * reloj.get_time()/1000
     if t == tiempo_total:
         pygame.quit()
         sys.exit()
 
     # Limita la velocidad de la animación a 4 fotogramas por segundo
-    reloj.tick(1)
+    reloj.tick(10)
