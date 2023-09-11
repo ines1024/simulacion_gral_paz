@@ -10,7 +10,7 @@ import numpy as np
 
 
 class Auto:
-    def __init__(self, id:int, p:int, t:int, v:int, a:int, p_ant, choque):
+    def __init__(self, id:int, p:int, t:int, v:int, a:int, p_ant):
         self.id = id
         self.pos = p
         self.t_inicio = t # guardamos tiempo de entrada porque el de salida es el que queda guardado
@@ -68,10 +68,10 @@ class Auto:
         # dif < 0 : me estoy acercando
         # dif > 0 : me estoy alejando
         if (self.vel == 0):
-            if (distancia < 10):
+            if (distancia < 70):
                 self.vel = 0
             else: 
-                self.vel =  30/3.6*time_scale  #avanzo poco 
+                self.vel =  20/3.6*time_scale  #avanzo poco 
         
         else: 
             dif = distancia / self.vel 
@@ -97,9 +97,10 @@ class Auto:
             
             elif (distancia > 40):
                 if (self.vel < vel_adel):
-                    val_aceleracion = random.normalvariate(self.media_acel, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.5, 0.1)
                 else:
-                    val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-3, 0.1)
+
                 
             else: # distancia por debajo de lo recomendado                 
                 # se distrajo?...
@@ -111,13 +112,13 @@ class Auto:
                 #     #no
                 val_aceleracion = random.normalvariate(-3.7, 0.05) # no depende de si suele acelerar, va a frenar por seguridad
 
-            if(self.vel > 80/3.6*time_scale):   
+            if(self.vel > 75/3.6*time_scale):   
                 # hay camaras 
                 if int(self.pos) in range(5300, 5510) or int(self.pos) in range(10300, 10510):
                     # azar = random.randint(0, 1)
                     # if azar > self.distraido:
                     # no se distrajo
-                    val_aceleracion = random.normalvariate(-3,1)
+                    val_aceleracion = random.normalvariate(-3.5,0.2)
                     # else:
                     #     val_aceleracion = 0
 
@@ -134,17 +135,10 @@ class Carril:
     def __init__(self, autos:list[Auto]):
         self.autos = autos
         self.multas = {} # por cada hora la cantidad de multas que hubo
-        self.tiempos = {} # cuanto tado cada auto en recorrer todo
+        self.tiempos = {} # cuanto tardaron los autos en promedio en c/ hora
         self.choques =  {} # por cada hora la cantidad de choques que hubo
         self.velocidades = {} # por cada hora la velocidad promedio
         # si es que hay diferencias...
-        self.velocidades_rapidos = {} # por cada hora la velocidad promedio de los rapidos
-        self.velocidades_lentos = {} # por cada hora la velocidad promedio de los lentos
-
-        self.cant_autos = {} # 
-
-
-
-
-        
-    
+        #self.velocidades_rapidos = {} # por cada hora la velocidad promedio de los rapidos
+        #self.velocidades_lentos = {} # por cada hora la velocidad promedio de los lentos
+        self.cant_autos = {} # cantidad de autos que ingresan por hora     
