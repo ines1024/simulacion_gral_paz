@@ -120,7 +120,6 @@ class Auto:
                     val_aceleracion = random.normalvariate(-3,1)
                     # else:
                     #     val_aceleracion = 0
-                    
 
             self.acel = val_aceleracion * time_scale
             self.vel = self.vel + self.acel 
@@ -134,9 +133,17 @@ class Auto:
 class Carril:
     def __init__(self, autos:list[Auto]):
         self.autos = autos
-        self.multas = {} # guarda por cada hora la cantidad de multas que hubo
-        self.tiempos = {} # guarda cuanto tado cada auto en recorrer todo
-        
+        self.multas = {} # por cada hora la cantidad de multas que hubo
+        self.tiempos = {} # cuanto tado cada auto en recorrer todo
+        self.choques =  {} # por cada hora la cantidad de choques que hubo
+        self.velocidades = {} # por cada hora la velocidad promedio
+        # si es que hay diferencias...
+        self.velocidades_rapidos = {} # por cada hora la velocidad promedio de los rapidos
+        self.velocidades_lentos = {} # por cada hora la velocidad promedio de los lentos
+
+        self.cant_autos = {} # 
+
+
 
 
         
