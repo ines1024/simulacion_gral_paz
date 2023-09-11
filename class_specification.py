@@ -44,8 +44,8 @@ class Auto:
 
         # distraccion
         rand2 = random.randint(0, 5)
-        if rand2 == 1:
-            self.distraido = 0.3
+        if rand2 == 1 or rand2 == 2:
+            self.distraido = 0.6
         else: 
             self.distraido = 0 #promedio
         
@@ -104,21 +104,21 @@ class Auto:
                 
             else: # distancia por debajo de lo recomendado                 
                 # se distrajo?...
-                # azar = random.randint(0, 1)
-                # if azar <= self.distraido:
+                azar = random.randint(0, 1)
+                if azar <= self.distraido:
                 #     #si
-                #     val_aceleracion = 0 
-                # else:
+                    val_aceleracion = 0 
+                else:
                 #     #no
-                val_aceleracion = random.normalvariate(-3.7, 0.05) # no depende de si suele acelerar, va a frenar por seguridad
+                    val_aceleracion = random.normalvariate(-3.7, 0.05) # no depende de si suele acelerar, va a frenar por seguridad
 
             if(self.vel > 75/3.6*time_scale):   
                 # hay camaras 
-                if int(self.pos) in range(5300, 5510) or int(self.pos) in range(10300, 10510):
+                if int(self.pos) in range(5400, 5510) or int(self.pos) in range(10400, 10510):
                     # azar = random.randint(0, 1)
                     # if azar > self.distraido:
                     # no se distrajo
-                    val_aceleracion = random.normalvariate(-3.5,0.2)
+                    val_aceleracion = random.normalvariate(-3,0.2)
                     # else:
                     #     val_aceleracion = 0
 

@@ -49,7 +49,7 @@ posicion_actual = 0
 
 # Iniciar la simulación
 carril = Carril(autos)
-tiempo_total = 3600 * 4  # Tiempo total de simulación en segundos
+tiempo_total = 86400  # Tiempo total de simulación en segundos
 
 # Reloj para controlar la velocidad de actualización
 reloj = pygame.time.Clock()
@@ -219,11 +219,11 @@ while True:
                 carril.velocidades[hora] += auto.vel
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
-        elif ((seg in range(7*3600, 11*3600) or seg in range(16*3600, 20*3600)) and seg % 3 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
+        elif ((seg in range(7*3600, 11*3600) or seg in range(16*3600, 20*3600)) and seg % 2 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
             # Hora pico
             i_nuevo = len(carril.autos)
 
-            if carril.autos[len(carril.autos)-1].pos > 200:
+            if carril.autos[len(carril.autos)-1].pos > 100:
                 vel = random.normalvariate(50/3.6, 5/3.6)
                 nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
                 carril.autos.append(nuevo_auto)
@@ -231,7 +231,7 @@ while True:
                 carril.velocidades[hora] += auto.vel
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
-            elif carril.autos[len(carril.autos)-1].pos > 70:
+            elif carril.autos[len(carril.autos)-1].pos > 60:
                 vel = random.normalvariate(40/3.6, 5/3.6)
                 nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
                 carril.autos.append(nuevo_auto)
