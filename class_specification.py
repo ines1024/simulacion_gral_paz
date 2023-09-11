@@ -134,6 +134,10 @@ class Auto:
 class Carril:
     def __init__(self, autos:list[Auto]):
         self.autos = autos
-        self.multas = {}
+        self.multas = {} # guarda por cada hora la cantidad de multas que hubo
+        self.tiempos = {} # guarda cuanto tado cada auto en recorrer todo
+        
+
+
         
     
