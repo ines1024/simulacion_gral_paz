@@ -294,7 +294,7 @@ while True:
                 window.blit(auto.color, auto_rect.topleft)
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
-            elif carril.autos[len(carril.autos)-1].pos > 10:
+            elif carril.autos[len(carril.autos)-1].pos > 20:
                 vel = random.normalvariate(30/3.6, 5/3.6)
                 color_random = random.randint(0, 3)
                 if color_random == 1:

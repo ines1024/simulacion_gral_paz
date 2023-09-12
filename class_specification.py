@@ -77,14 +77,14 @@ class Auto:
         else: 
             dif = distancia / self.vel 
 
-            if(distancia > 250):
+            if(distancia > 300):
                 # esta lejos
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.5, 0.5)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-0.6, 0.4)
 
-            elif(distancia > 120): # distancia por encima de lo recomendado
+            elif(distancia > 150): # distancia por encima de lo recomendado
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.3, 0.2)
                 else:
