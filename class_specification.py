@@ -81,7 +81,7 @@ class Auto:
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.7, 0.3)
                 else:
-                    val_aceleracion = random.normalvariate(self.media_acel-1, 0.5)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.8, 0.4)
 
             elif(distancia > 100): # distancia por encima de lo recomendado
                 if (self.vel < 80/3.6*time_scale):
@@ -97,9 +97,9 @@ class Auto:
             
             elif (distancia > 40):
                 if (self.vel < vel_adel):
-                    val_aceleracion = random.normalvariate(self.media_acel-0.5, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.8, 0.1)
                 else:
-                    val_aceleracion = random.normalvariate(self.media_acel-3, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-3.3, 0.1)
 
                 
             else: # distancia por debajo de lo recomendado                 
@@ -117,10 +117,11 @@ class Auto:
                 if int(self.pos) in range(5400, 5510) or int(self.pos) in range(10400, 10510):
                     # azar = random.randint(0, 1)
                     # if azar > self.distraido:
-                    # no se distrajo
-                    val_aceleracion = random.normalvariate(-3,0.2)
+                    # # no se distrajo
+                    #     val_aceleracion = random.normalvariate(-2.5,0.7)
                     # else:
-                    #     val_aceleracion = 0
+                    #      val_aceleracion = 0
+                    val_aceleracion = random.normalvariate(-2.7,0.3)
 
             self.acel = val_aceleracion * time_scale
             self.vel = self.vel + self.acel 
