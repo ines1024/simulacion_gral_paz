@@ -23,14 +23,14 @@ class Auto:
         self.multas = 0
 
         # media de velocidad que le gusta ir 
-        rand = random.randint(0, 5)
-        if rand == 1: #lento
-            self.vel_prefe = random.normalvariate(65/3.6, 5/3.6)
-        elif rand == 2 or rand == 3: #rapido
-            self.vel_prefe = random.normalvariate(85/3.6, 5/3.6) 
-        else: 
-            self.vel_prefe = random.normalvariate(75/3.6, 5/3.6) 
-        self.vel_prefe *= 1
+        #rand = random.randint(0, 5)
+        # if rand == 1: #lento
+        #     self.vel_prefe = random.normalvariate(65/3.6, 5/3.6)
+        # elif rand == 2 or rand == 3: #rapido
+        #     self.vel_prefe = random.normalvariate(85/3.6, 5/3.6) 
+        # else: 
+        #     self.vel_prefe = random.normalvariate(75/3.6, 5/3.6) 
+        # self.vel_prefe *= 1
 
         #randomizamos la personalidad (proba de que acelere o se mantenga)
         rand1 = random.randint(0, 5)
@@ -79,13 +79,13 @@ class Auto:
             if(distancia > 200):
                 # esta lejos
                 if (self.vel < 80/3.6*time_scale):
-                    val_aceleracion = random.normalvariate(self.media_acel+0.7, 0.3)
+                    val_aceleracion = random.normalvariate(self.media_acel+0.5, 0.5)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-0.8, 0.4)
 
             elif(distancia > 100): # distancia por encima de lo recomendado
                 if (self.vel < 80/3.6*time_scale):
-                    val_aceleracion = random.normalvariate(self.media_acel+0.4, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel+0.3, 0.2)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-1, 0.1)
 

@@ -146,7 +146,6 @@ while True:
                     vel_adel = carril.autos[i-1].vel
                 auto.acelerar(pos_adel, vel_adel, time_scale)
                 auto.pos_ant = auto.pos 
-                carril.velocidades[hora] += auto.vel *3.6/time_scale #aca iria vel
 
                 #si los indices lo permiten...
                 if i < len(autos)-3:
@@ -158,6 +157,8 @@ while True:
                                 auto.vel = min(40/3.6*60, auto.vel)
 
                 auto.pos += (auto.vel) * dt 
+                if seg > seg_ant:
+                    carril.velocidades[hora] += auto.vel *3.6/time_scale 
 
                 # el auto salio
                 if (auto.pos) >= 15000:
@@ -208,26 +209,21 @@ while True:
     # por cuestiones de implementacion de la simulacion, chequeamos que se haya cumplico un segundo entero
     if seg > seg_ant:
         # Regulamos la densidad del trafico (metemos nuevos autos)
-        if (seg % 10 == 0 and carril.autos[len(carril.autos)-1].pos > 40): 
+        if (seg % 10 == 0 and carril.autos[len(carril.autos)-1].pos > 70): 
             # No hora pico
             i_nuevo = len(carril.autos)
 
             if carril.autos[len(carril.autos)-1].pos > 200:
                 vel = random.normalvariate(80/3.6, 15/3.6)
-                nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
-                carril.autos.append(nuevo_auto)
-                carril.velocidades[hora] += auto.vel *3.6/time_scale
-                carril.cant_autos[hora] += 1
-                pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
-            elif carril.autos[len(carril.autos)-1].pos > 70:
+            else:
                 vel = random.normalvariate(60/3.6, 10/3.6)
-                nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
-                carril.autos.append(nuevo_auto)
-                carril.cant_autos[hora] += 1
-                carril.velocidades[hora] += auto.vel *3.6/time_scale
-                pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
+            nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
+            carril.autos.append(nuevo_auto)
+            carril.cant_autos[hora] += 1
+            carril.velocidades[hora] += auto.vel *3.6/time_scale
+            pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
-        elif ((seg in range(7*3600, 11*3600) or seg in range(16*3600, 20*3600)) and seg % 2 == 0 and carril.autos[len(carril.autos)-1].pos > 30): 
+        elif (((seg in range(7*3600, 8*3600) or seg in range(9*3600, 10*3600) or seg in range(16*3600, 19*3600)) and seg % 2 == 0) or ((seg in range(8*3600, 9*3600) or seg in range(19*3600, 20*3600)) and seg % 1 == 0)): 
             # Hora pico
             i_nuevo = len(carril.autos)
 
@@ -239,8 +235,8 @@ while True:
                 carril.velocidades[hora] += auto.vel *3.6/time_scale
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
-            elif carril.autos[len(carril.autos)-1].pos > 60:
-                vel = random.normalvariate(40/3.6, 5/3.6)
+            elif carril.autos[len(carril.autos)-1].pos > 40:
+                vel = random.normalvariate(30/3.6, 5/3.6)
                 nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
                 carril.autos.append(nuevo_auto)
                 carril.cant_autos[hora] += 1
