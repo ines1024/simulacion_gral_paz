@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def recopilar_data(multas, tiempos, choques, velocidades, cant_autos):  
     # Nombre del archivo CSV en el que deseas guardar el diccionario
-    filename = 'simulacion3.csv'
+    filename = 'simulacion10.csv'
     diccionarios = [multas, tiempos, choques, velocidades, cant_autos]
 
     # Abre el archivo CSV en modo escritura
