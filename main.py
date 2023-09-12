@@ -29,23 +29,33 @@ negro = (0, 0, 0)
 verde = (0, 255, 0)
 rojo = (255, 0, 0)
 naranja = (255, 128, 0)
-gris = (46, 45, 45)
+gris = (77, 77, 77)
+
+# Autos
+auto_azul = pygame.image.load("media/blue_car.png")
+auto_azul = pygame.transform.scale(auto_azul, (30,20))
+auto_negro = pygame.image.load("media/white_car.png")
+auto_negro = pygame.transform.scale(auto_negro, (30,20))
+auto_rojo = pygame.image.load("media/red_car.png")
+auto_rojo = pygame.transform.scale(auto_rojo, (30,20))
+cam = pygame.image.load("media/cam.png")
+cam = pygame.transform.scale(cam, (27,27))
 
 # Fuente
-font = pygame.font.SysFont("trebuchet ms", 36)
+font = pygame.font.SysFont("trebuchet ms", 24)
 
 # Imagen de fondo
-#fondo = pygame.image.load('background.jpg')
-#fondo = pygame.transform.scale(fondo, (window_width, window_height))  # Ajusta la imagen al tamaño de la ventana
+fondo = pygame.image.load('media/background.jpg')
+fondo = pygame.transform.scale(fondo, (window_width, window_height))  # Ajusta la imagen al tamaño de la ventana
 
 # Sonido
-beep = pygame.mixer.Sound('beep.mp3')
+beep = pygame.mixer.Sound('media/beep.mp3')
 
 ############################# SIMULACION
 
 # Armamos la simulación...
 vel1 = random.normalvariate(80/3.6, 15/3.6)
-auto1 = Auto(0, 0, 0, vel1*60, 0, 0)
+auto1 = Auto(0, 0, 0, vel1*60, 0, 0, auto_rojo)
 autos: list[Auto] = [auto1]
 i: int = 0
 # obs: el primer auto de la lista es el mas cercano a llegar (id = 0)
@@ -76,6 +86,7 @@ carril.updates[hora] = 0
 
 # GRAFICO
 while True:
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -107,8 +118,19 @@ while True:
 
     # "Limpia" la pantalla
     window.fill(blanco)
+    # Fondo
+    window.blit(fondo, (0,0))
+    
     # Dibuja el carril
-    pygame.draw.line(window, gris, (0, window_height // 2), (window_width, window_height // 2), 30)
+    pygame.draw.line(window, gris, (0, window_height // 2), (window_width, window_height // 2), 34)
+
+    # Posicion de las camaras
+    camara = cam.get_rect()
+    camara.center = (int(5500- tramo_visible[0])*escala, window_height // 2)  # Posición del automóvil
+    window.blit(cam, camara.topleft)
+    camara = cam.get_rect()
+    camara.center = (int(10500- tramo_visible[0])*escala, window_height // 2)  # Posición del automóvil
+    window.blit(cam, camara.topleft)
 
 
     if seg > seg_ant:
@@ -204,12 +226,20 @@ while True:
             if tramo_visible[0] <= auto.pos <= tramo_visible[1]:
                 pos_en_ventana = int(auto.pos - tramo_visible[0]) * escala
                 if auto.choque > 0:
+                    auto_rect = auto.color.get_rect()
+                    auto_rect.center = (pos_en_ventana, window_height // 2)  # Posición del automóvil
+                    # Dibujar la imagen del automóvil en la ventana
+                    window.blit(auto.color, auto_rect.topleft)
                     pygame.draw.circle(window, rojo, (pos_en_ventana, window_height // 2), 3)
                 else:
-                    pygame.draw.circle(window, verde, (pos_en_ventana, window_height // 2), 3)
+                    auto_rect = auto.color.get_rect()
+                    auto_rect.center = (pos_en_ventana, window_height // 2)  # Posición del automóvil
+                    # Dibujar la imagen del automóvil en la ventana
+                    window.blit(auto.color, auto_rect.topleft)
+                    #pygame.draw.circle(window, verde, (pos_en_ventana, window_height // 2), 3)
         i+=1
 
-    # por cuestiones de implementacion de la simulacion, chequeamos que se haya cumplico un segundo entero
+    # Por cuestiones de implementacion de la simulacion, chequeamos que se haya cumplido un segundo entero
     if seg > seg_ant:
         # Regulamos la densidad del trafico (metemos nuevos autos)
         if (seg % 10 == 0 and carril.autos[len(carril.autos)-1].pos > 70): 
@@ -220,11 +250,23 @@ while True:
                 vel = random.normalvariate(80/3.6, 15/3.6)
             else:
                 vel = random.normalvariate(60/3.6, 10/3.6)
-            nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
+            color_random = random.randint(0, 3)
+            if color_random == 1:
+                nuevo_color = auto_azul
+            elif color_random == 2:
+                nuevo_color = auto_rojo
+            else: 
+                nuevo_color = auto_negro
+            nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0, nuevo_color)
             carril.autos.append(nuevo_auto)
             carril.cant_autos[hora] += 1
             carril.velocidades[hora] += auto.vel *3.6/time_scale
             carril.updates[hora] += 1
+
+            auto_rect = auto.color.get_rect()
+            auto_rect.center = (pos_en_ventana, window_height // 2)  # Posición del automóvil
+            # Dibujar la imagen del automóvil en la ventana
+            window.blit(auto.color, auto_rect.topleft)
             pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
         elif (((seg in range(7*3600, 8*3600) or seg in range(9*3600, 11*3600) or seg in range(16*3600, 19*3600)) and seg % 2 == 0) or ((seg in range(8*3600, 9*3600) or seg in range(19*3600, 20*3600)) and seg % 1 == 0)): 
@@ -233,44 +275,61 @@ while True:
 
             if carril.autos[len(carril.autos)-1].pos > 100:
                 vel = random.normalvariate(50/3.6, 5/3.6)
-                nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
+                color_random = random.randint(0, 3)
+                if color_random == 1:
+                    nuevo_color = auto_azul
+                elif color_random == 2:
+                    nuevo_color = auto_rojo
+                else: 
+                    nuevo_color = auto_negro
+                nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0, nuevo_color)
                 carril.autos.append(nuevo_auto)
                 carril.cant_autos[hora] += 1
                 carril.velocidades[hora] += auto.vel *3.6/time_scale
                 carril.updates[hora] += 1
+
+                auto_rect = auto.color.get_rect()
+                auto_rect.center = (pos_en_ventana, window_height // 2)  # Posición del automóvil
+                # Dibujar la imagen del automóvil en la ventana
+                window.blit(auto.color, auto_rect.topleft)
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
             elif carril.autos[len(carril.autos)-1].pos > 40:
                 vel = random.normalvariate(30/3.6, 5/3.6)
-                nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0)
+                color_random = random.randint(0, 3)
+                if color_random == 1:
+                    nuevo_color = auto_azul
+                elif color_random == 2:
+                    nuevo_color = auto_rojo
+                else: 
+                    nuevo_color = auto_negro
+                nuevo_auto = Auto(i_nuevo, 0, seg, vel*time_scale, 0, 0, nuevo_color)
                 carril.autos.append(nuevo_auto)
                 carril.cant_autos[hora] += 1
                 carril.velocidades[hora] += auto.vel *3.6/time_scale
                 carril.updates[hora] += 1
+
+                auto_rect = auto.color.get_rect()
+                auto_rect.center = (pos_en_ventana, window_height // 2)  # Posición del automóvil
+                window.blit(auto.color, auto_rect.topleft)
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
 
     # GRAFICAMOS
-
-    # Posicion de las camaras
-    pygame.draw.circle(window, naranja, (int(5500- tramo_visible[0])*escala, window_height // 2), 3.5)
-    pygame.draw.circle(window, naranja, (int(10500- tramo_visible[0])*escala, window_height // 2), 3.5)
-
     # Dibujamos bordes
-    pygame.draw.line(window, rojo, (0, window_height // 2 + 15), (window_width, window_height // 2 + 15), 3)
-    pygame.draw.line(window, rojo, (0, window_height // 2 - 15), (window_width, window_height // 2 - 15), 3)
+    pygame.draw.line(window, blanco, (0, window_height // 2 + 20), (window_width, window_height // 2 + 20), 3)
+    pygame.draw.line(window, blanco, (0, window_height // 2 - 19), (window_width, window_height // 2 - 19), 3)
 
-    metros = f"de {tramo_visible[0]} hasta {tramo_visible[1]} metros"
-    text = font.render(metros, True, negro)
-    window.blit(text, (40, 40))
+    metros = f"[{tramo_visible[0]}m, {tramo_visible[1]}m]"
+    text = font.render(metros, True, blanco)
+    size = text.get_rect()
+    window.blit(text, ((window_width - size.width) // 2, 130))
 
     minutos = (seg // 60) % 60
     hora_formato = f"{hora:02d}:{minutos:02d}hs"    
-    text2 = font.render(hora_formato, True, negro)
-    window.blit(text2, (40, 120))  # Segundo actual 
-
-    # Fondo
-    #window.blit(fondo, pos_fondo)
+    text2 = font.render(hora_formato, True, blanco)
+    size2 = text2.get_rect()
+    window.blit(text2, ((window_width - size2.width) // 2, 155)) 
 
     # Actualiza la pantalla
     pygame.display.update()
