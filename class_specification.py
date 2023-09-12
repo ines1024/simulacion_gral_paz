@@ -142,4 +142,5 @@ class Carril:
         # si es que hay diferencias...
         #self.velocidades_rapidos = {} # por cada hora la velocidad promedio de los rapidos
         #self.velocidades_lentos = {} # por cada hora la velocidad promedio de los lentos
-        self.cant_autos = {} # cantidad de autos que ingresan por hora     
+        self.cant_autos = {} # cantidad de autos que ingresan por hora    
+        self.updates = {} 

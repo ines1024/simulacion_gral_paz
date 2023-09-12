@@ -72,6 +72,7 @@ carril.cant_autos[0] = 1
 carril.velocidades[0] = 0
 carril.choques[0] = 0  
 carril.multas[0] = 0
+carril.updates[hora] = 0
 
 # GRAFICO
 while True:
@@ -113,7 +114,7 @@ while True:
     if seg > seg_ant:
         if (seg % 3600 == 0 and seg > 0): 
             carril.tiempos[hora] /= carril.cant_autos[hora]
-            carril.velocidades[hora] /= (carril.cant_autos[hora] * 3600)
+            carril.velocidades[hora] /= (carril.updates[hora])
             hora +=1
             #print(hora)
             carril.tiempos[hora] = 0
@@ -121,6 +122,7 @@ while True:
             carril.velocidades[hora] = 0
             carril.choques[hora] = 0
             carril.multas[hora] = 0
+            carril.updates[hora] = 0
 
     i = 0
     for auto in carril.autos:
@@ -157,8 +159,9 @@ while True:
                                 auto.vel = min(40/3.6*60, auto.vel)
 
                 auto.pos += (auto.vel) * dt 
-                if seg > seg_ant:
-                    carril.velocidades[hora] += auto.vel *3.6/time_scale 
+                
+                carril.updates[hora] += 1
+                carril.velocidades[hora] += auto.vel *3.6/time_scale 
 
                 # el auto salio
                 if (auto.pos) >= 15000:
@@ -221,9 +224,10 @@ while True:
             carril.autos.append(nuevo_auto)
             carril.cant_autos[hora] += 1
             carril.velocidades[hora] += auto.vel *3.6/time_scale
+            carril.updates[hora] += 1
             pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
-        elif (((seg in range(7*3600, 8*3600) or seg in range(9*3600, 10*3600) or seg in range(16*3600, 19*3600)) and seg % 2 == 0) or ((seg in range(8*3600, 9*3600) or seg in range(19*3600, 20*3600)) and seg % 1 == 0)): 
+        elif (((seg in range(7*3600, 8*3600) or seg in range(9*3600, 11*3600) or seg in range(16*3600, 19*3600)) and seg % 2 == 0) or ((seg in range(8*3600, 9*3600) or seg in range(19*3600, 20*3600)) and seg % 1 == 0)): 
             # Hora pico
             i_nuevo = len(carril.autos)
 
@@ -233,6 +237,7 @@ while True:
                 carril.autos.append(nuevo_auto)
                 carril.cant_autos[hora] += 1
                 carril.velocidades[hora] += auto.vel *3.6/time_scale
+                carril.updates[hora] += 1
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
             elif carril.autos[len(carril.autos)-1].pos > 40:
@@ -241,6 +246,7 @@ while True:
                 carril.autos.append(nuevo_auto)
                 carril.cant_autos[hora] += 1
                 carril.velocidades[hora] += auto.vel *3.6/time_scale
+                carril.updates[hora] += 1
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
 
