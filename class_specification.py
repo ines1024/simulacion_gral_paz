@@ -70,12 +70,18 @@ class Auto:
                 # esta lejos
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.5, 0.5)
+
+                # if((self.vel < 60/3.6*time_scale) and self.t in range(0*3600, 2*3600)):
+                #     val_aceleracion = random.normalvariate(self.media_acel + 0.3, 0.3) 
+                
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-0.6, 0.4)
 
             elif(distancia > 200): # distancia por encima de lo recomendado
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.3, 0.2)
+                # if((self.vel < 60/3.6*time_scale) and self.t in range(0*3600, 2*3600)):
+                #     val_aceleracion = random.normalvariate(self.media_acel + 0.3, 0.3) 
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-1, 0.1)
 
@@ -87,9 +93,9 @@ class Auto:
             
             elif (distancia > 40):
                 if (self.vel < vel_adel):
-                    val_aceleracion = random.normalvariate(self.media_acel-0.7, 0.3)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.85, 0.2)
                 else:
-                    val_aceleracion = random.normalvariate(self.media_acel-3.3, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-3.8, 0.1)
 
                 
             else: # distancia por debajo de lo recomendado                 
