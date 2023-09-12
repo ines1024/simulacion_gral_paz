@@ -81,13 +81,13 @@ class Auto:
 
             elif (distancia > 80):
                 if (self.vel < vel_adel):
-                    val_aceleracion = random.normalvariate(self.media_acel-0.55, 0.2)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.55, 0.3)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
             
             elif (distancia > 40):
                 if (self.vel < vel_adel):
-                    val_aceleracion = random.normalvariate(self.media_acel-0.7, 0.2)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.7, 0.3)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-3.3, 0.1)
 
