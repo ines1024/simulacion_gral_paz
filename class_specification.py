@@ -23,16 +23,6 @@ class Auto:
         self.multas = 0
         self.color = color
 
-        # media de velocidad que le gusta ir 
-        #rand = random.randint(0, 5)
-        # if rand == 1: #lento
-        #     self.vel_prefe = random.normalvariate(65/3.6, 5/3.6)
-        # elif rand == 2 or rand == 3: #rapido
-        #     self.vel_prefe = random.normalvariate(85/3.6, 5/3.6) 
-        # else: 
-        #     self.vel_prefe = random.normalvariate(75/3.6, 5/3.6) 
-        # self.vel_prefe *= 1
-
         #randomizamos la personalidad (proba de que acelere o se mantenga)
         rand1 = random.randint(0, 5)
         if rand1 == 1:
@@ -49,7 +39,6 @@ class Auto:
             self.distraido = 0.6
         else: 
             self.distraido = 0 #promedio
-        
         
 
     def __repr__ (self):
@@ -119,12 +108,6 @@ class Auto:
             if(self.vel > 75/3.6*time_scale):   
                 # hay camaras 
                 if int(self.pos) in range(5400, 5510) or int(self.pos) in range(10400, 10510):
-                    # azar = random.randint(0, 1)
-                    # if azar > self.distraido:
-                    # # no se distrajo
-                    #     val_aceleracion = random.normalvariate(-2.5,0.7)
-                    # else:
-                    #      val_aceleracion = 0
                     val_aceleracion = random.normalvariate(-2.7,0.3)
 
 
@@ -145,8 +128,6 @@ class Carril:
         self.tiempos = {} # cuanto tardaron los autos en promedio en c/ hora
         self.choques =  {} # por cada hora la cantidad de choques que hubo
         self.velocidades = {} # por cada hora la velocidad promedio
-        # si es que hay diferencias...
-        #self.velocidades_rapidos = {} # por cada hora la velocidad promedio de los rapidos
-        #self.velocidades_lentos = {} # por cada hora la velocidad promedio de los lentos
+        self.vel_cam = {} # por cada hora la velocidad promedio de las camaras
         self.cant_autos = {} # cantidad de autos que ingresan por hora    
         self.updates = {} 

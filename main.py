@@ -83,6 +83,7 @@ carril.velocidades[0] = 0
 carril.choques[0] = 0  
 carril.multas[0] = 0
 carril.updates[hora] = 0
+carril.vel_cam[hora] = 0
 
 # GRAFICO
 while True:
@@ -137,6 +138,7 @@ while True:
         if (seg % 3600 == 0 and seg > 0): 
             carril.tiempos[hora] /= carril.cant_autos[hora]
             carril.velocidades[hora] /= (carril.updates[hora])
+            carril.vel_cam[hora] /= (carril.multas[hora])
             hora +=1
             #print(hora)
             carril.tiempos[hora] = 0
@@ -213,10 +215,9 @@ while True:
                     auto.multas +=1
                     carril.multas[hora] += 1
                     print("multa", auto.vel*3.6/time_scale)
+                    carril.vel_cam[hora] += auto.vel *3.6/time_scale
 
                 # # Chequeo interno (comentar)
-                # if auto.pos_ant < 5500 and auto.pos >= 5500:
-                #     print("CAMARA a", auto.vel*3.6/time_scale)
                 if auto.pos_ant < 500 and auto.pos >= 500:
                     print("OTRO a", auto.vel*3.6/time_scale)
                     
@@ -236,7 +237,6 @@ while True:
                     auto_rect.center = (pos_en_ventana, window_height // 2)  # Posición del automóvil
                     # Dibujar la imagen del automóvil en la ventana
                     window.blit(auto.color, auto_rect.topleft)
-                    #pygame.draw.circle(window, verde, (pos_en_ventana, window_height // 2), 3)
         i+=1
 
     # Por cuestiones de implementacion de la simulacion, chequeamos que se haya cumplido un segundo entero
