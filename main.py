@@ -166,20 +166,21 @@ while True:
 
                 if auto.pos >= pos_adel and pos_adel < 15000:
                     # chequeamos que el de adelante no haya ya salido
-                    print("____________________________________________")
-                    print("CHOQUE en p =", auto.pos,",en t=", seg, ", auto=", auto.id)
-                    print("____________________________________________")
                     beep.play()
                     auto.vel = 0
                     if auto.choque == 0:
-                        auto.choque = 1
+                        auto.choque = seg
                         if (carril.autos[i-1].choque == 0):
                             # si el de adelante no choco en este mismo segundo
                             carril.choques[hora] += 1
+                            print("____________________________________________")
+                            print("CHOQUE en p =", auto.pos,",en t=", seg, ", auto=", auto.id)
+                            print("____________________________________________")
 
                 # CHOQUE
                 if (auto.choque > 0):
-                    auto.choque = 0
+                    if seg > auto.choque:
+                        auto.choque = 0
 
                 # MULTAS
                 if auto.vel > 81/3.6*time_scale and ((auto.pos_ant < 5500 and auto.pos >= 5500) or (auto.pos_ant < 10500 and auto.pos >= 10500)): 
