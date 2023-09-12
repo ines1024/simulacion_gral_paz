@@ -217,7 +217,7 @@ while True:
                 # # Chequeo interno (comentar)
                 # if auto.pos_ant < 5500 and auto.pos >= 5500:
                 #     print("CAMARA a", auto.vel*3.6/time_scale)
-                if auto.pos_ant < 14000 and auto.pos >= 14000:
+                if auto.pos_ant < 500 and auto.pos >= 500:
                     print("OTRO a", auto.vel*3.6/time_scale)
                     
             auto.t = seg
@@ -269,11 +269,11 @@ while True:
             window.blit(auto.color, auto_rect.topleft)
             pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
-        elif (((seg in range(7*3600, 8*3600) or seg in range(9*3600, 11*3600) or seg in range(16*3600, 19*3600)) and seg % 2 == 0) or ((seg in range(8*3600, 9*3600) or seg in range(19*3600, 20*3600)) and seg % 1 == 0)): 
+        elif (((seg in range(7*3600, 8*3600) or seg in range(9*3600, 11*3600) or seg in range(16*3600, 19*3600)) and seg % 1 == 0) or ((seg in range(8*3600, 9*3600) or seg in range(19*3600, 20*3600)) and seg % 1 == 0)): 
             # Hora pico
             i_nuevo = len(carril.autos)
 
-            if carril.autos[len(carril.autos)-1].pos > 100:
+            if carril.autos[len(carril.autos)-1].pos > 50:
                 vel = random.normalvariate(50/3.6, 5/3.6)
                 color_random = random.randint(0, 3)
                 if color_random == 1:
@@ -294,7 +294,7 @@ while True:
                 window.blit(auto.color, auto_rect.topleft)
                 pygame.draw.circle(window, (255, 0, 0), (int(nuevo_auto.pos- tramo_visible[0]), window_height // 2), 3)
 
-            elif carril.autos[len(carril.autos)-1].pos > 40:
+            elif carril.autos[len(carril.autos)-1].pos > 10:
                 vel = random.normalvariate(30/3.6, 5/3.6)
                 color_random = random.randint(0, 3)
                 if color_random == 1:

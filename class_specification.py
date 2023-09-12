@@ -77,14 +77,14 @@ class Auto:
         else: 
             dif = distancia / self.vel 
 
-            if(distancia > 200):
+            if(distancia > 250):
                 # esta lejos
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.5, 0.5)
                 else:
-                    val_aceleracion = random.normalvariate(self.media_acel-0.8, 0.4)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.6, 0.4)
 
-            elif(distancia > 100): # distancia por encima de lo recomendado
+            elif(distancia > 120): # distancia por encima de lo recomendado
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.3, 0.2)
                 else:
@@ -92,13 +92,13 @@ class Auto:
 
             elif (distancia > 80):
                 if (self.vel < vel_adel):
-                    val_aceleracion = random.normalvariate(self.media_acel-0.5, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.55, 0.2)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-2, 0.1)
             
             elif (distancia > 40):
                 if (self.vel < vel_adel):
-                    val_aceleracion = random.normalvariate(self.media_acel-0.8, 0.1)
+                    val_aceleracion = random.normalvariate(self.media_acel-0.7, 0.2)
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-3.3, 0.1)
 
@@ -111,8 +111,11 @@ class Auto:
                     val_aceleracion = 0 
                 else:
                 #     #no
-                    val_aceleracion = random.normalvariate(-3.7, 0.05) # no depende de si suele acelerar, va a frenar por seguridad
-
+                    if (self.vel < vel_adel):
+                        val_aceleracion = random.normalvariate(self.media_acel-3, 0.2)
+                    else:
+                        val_aceleracion = random.normalvariate(self.media_acel-3.7, 0.05)
+                
             if(self.vel > 75/3.6*time_scale):   
                 # hay camaras 
                 if int(self.pos) in range(5400, 5510) or int(self.pos) in range(10400, 10510):
@@ -123,6 +126,7 @@ class Auto:
                     # else:
                     #      val_aceleracion = 0
                     val_aceleracion = random.normalvariate(-2.7,0.3)
+
 
             self.acel = val_aceleracion * time_scale
             ruido = random.normalvariate(0,0.005)
