@@ -130,4 +130,4 @@ class Carril:
         self.velocidades = {} # por cada hora la velocidad promedio
         self.vel_cam = {} # por cada hora la velocidad promedio de las camaras
         self.cant_autos = {} # cantidad de autos que ingresan por hora    
-        self.updates = {} 
+        self.updates = {} # contamos la cantidad de veces que los autos actualizaron (para dps dividir)
