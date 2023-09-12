@@ -144,6 +144,7 @@ while True:
             carril.tiempos[hora] = 0
             carril.cant_autos[hora] = 0
             carril.velocidades[hora] = 0
+            carril.vel_cam[hora] = 0
             carril.choques[hora] = 0
             carril.multas[hora] = 0
             carril.updates[hora] = 0
