@@ -10,7 +10,7 @@ import numpy as np
 
 
 class Auto:
-    def __init__(self, id:int, p:int, t:int, v:int, a:int, p_ant):
+    def __init__(self, id:int, p:int, t:int, v:int, a:int, p_ant, color):
         self.id = id
         self.pos = p
         self.t_inicio = t # guardamos tiempo de entrada porque el de salida es el que queda guardado
@@ -21,6 +21,7 @@ class Auto:
         self.pos_ant = p_ant
         self.choque = 0
         self.multas = 0
+        self.color = color
 
         # media de velocidad que le gusta ir 
         #rand = random.randint(0, 5)
@@ -124,7 +125,8 @@ class Auto:
                     val_aceleracion = random.normalvariate(-2.7,0.3)
 
             self.acel = val_aceleracion * time_scale
-            self.vel = self.vel + self.acel 
+            ruido = random.normalvariate(0,0.005)
+            self.vel = self.vel + self.acel + ruido
 
             if self.vel < 0:
                 self.vel = 0
