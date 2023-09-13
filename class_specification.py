@@ -1,10 +1,12 @@
 # Atributos: 
 # ID: número identificador de auto (3 dígitos numéricos)
-# {pos, temp} → posición p en tiempo t, metros
-# {vel, temp} → velocidad v en tiempo t, metros/segundo
-# {acel, temp} → aceleración a en tiempo t, metros/segundo
-# {vel_ad, temp} → velocidad auto de adelante en tiempo t
-# {vel_at, temp} → velocidad auto de atrás en tiempo t
+# posición p en metros
+# t tiempo en segundos
+# v velocidad, metros/segundo
+# a aceleración 
+# p_ant posicion en el tiempo anterior
+# color del auto
+
 import random 
 import numpy as np
 
@@ -16,12 +18,12 @@ class Auto:
         self.t_inicio = t # guardamos tiempo de entrada porque el de salida es el que queda guardado
         self.t = t
         self.vel = v
-        self.acel = a
-        self.fin = 0
+        self.acel = a 
+        self.fin = 0 # si ya salio de la autopista
         self.pos_ant = p_ant
-        self.choque = 0
-        self.multas = 0
-        self.color = color
+        self.choque = 0 # si choca es 1 
+        self.multas = 0 # cantidad de multas
+        self.color = color # color del auto
 
         #randomizamos la personalidad (proba de que acelere o se mantenga)
         rand1 = random.randint(0, 5)
@@ -31,7 +33,6 @@ class Auto:
             self.media_acel = 1 #rapido
         else: 
             self.media_acel = 0.5 #promedio
-        #self.media_acel *= 60
 
         # distraccion
         rand2 = random.randint(0, 5)
@@ -69,19 +70,13 @@ class Auto:
             if(distancia > 300):
                 # esta lejos
                 if (self.vel < 80/3.6*time_scale):
-                    val_aceleracion = random.normalvariate(self.media_acel+0.5, 0.5)
-
-                # if((self.vel < 60/3.6*time_scale) and self.t in range(0*3600, 2*3600)):
-                #     val_aceleracion = random.normalvariate(self.media_acel + 0.3, 0.3) 
-                
+                    val_aceleracion = random.normalvariate(self.media_acel+0.5, 0.5) 
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-0.6, 0.4)
 
             elif(distancia > 200): # distancia por encima de lo recomendado
                 if (self.vel < 80/3.6*time_scale):
                     val_aceleracion = random.normalvariate(self.media_acel+0.3, 0.2)
-                # if((self.vel < 60/3.6*time_scale) and self.t in range(0*3600, 2*3600)):
-                #     val_aceleracion = random.normalvariate(self.media_acel + 0.3, 0.3) 
                 else:
                     val_aceleracion = random.normalvariate(self.media_acel-1, 0.1)
 
